@@ -170,7 +170,7 @@ const getOneproduct = async (req, res) => {
 };
 const deleteProduct = async (req, res) => {
   try {
-    const deleteProduct = await Product.findByIdAndDelete(req.params.id); 
+    const deleteProduct = await Product.findByIdAndDelete(req.params.id);
     return res
       .status(200)
       .json({ status: 200, msg: "delete successfully", deleteProduct });
@@ -194,9 +194,13 @@ const editProduct = async (req, res) => {
       updateData.image = req.file.path;
     }
 
-    const updateProduct = await Product.findByIdAndUpdate(req.params.id, updateData, {
-      new: true,
-    });
+    const updateProduct = await Product.findByIdAndUpdate(
+      req.params.id,
+      updateData,
+      {
+        new: true,
+      }
+    );
 
     if (!updateProduct) {
       return res.status(400).json({ status: 400, msg: "Product not found" });
