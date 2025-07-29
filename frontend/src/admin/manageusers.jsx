@@ -102,19 +102,22 @@ function ManageUsers() {
 
   const handleSave = async () => {
     try {
-      // const form = new FormData();
-      // form.append("fullName", formData.fullName);
-      // form.append("number", formData.number);
-      // form.append("email", formData.email);
-      // form.append("address", formData.address);
-      // if (imageFile instanceof File) {
-      //   formData.image("image", imageFile);
-      // }
+      console.log(formData);
 
+      const form = new FormData();
+      form.append("fullName", formData?.fullName || "");
+      form.append("number", formData?.number || "");
+      form.append("email", formData?.email || "");
+      form.append("address", formData?.address || "");
+
+      if (imageFile instanceof File) {
+        form.append("image", imageFile);
+      }
       await dispatch(
-        updateUserByAdminData({ id: editId, values: formData })
+        updateUserByAdminData({ id: editId, values: form })
       ).unwrap();
       setIsEditing(false);
+      dispatch(getAllUsersData());
     } catch (error) {
       console.error("Update error:", error);
     }

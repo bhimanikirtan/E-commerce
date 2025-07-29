@@ -92,6 +92,7 @@ export const updateUserByAdminData = createAsyncThunk(
   "admin/updateUserByAdmin",
   async ({ id, values }, { dispatch }) => {
     try {
+      console.log(values);
       const response = await updateUserByAdminAPI(id, values);
       dispatch(
         openSnackbar({
