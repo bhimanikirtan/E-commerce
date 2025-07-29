@@ -47,6 +47,7 @@ const cartSlice = createSlice({
             })
             .addCase(getAllCartData.fulfilled, (state, action) => {
                 state.loading = false;
+                console.log(action.payload.cartItems)
                 state.cartData = action.payload.cartItems.products;
                 state.total = action.payload.cartItems.total;
                 state.cartItems = action.payload.cartItems;

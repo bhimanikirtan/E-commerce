@@ -1,159 +1,168 @@
-import { Grid, Box, Typography, Button } from "@mui/material";
-import { Outlet, useNavigate, NavLink } from "react-router-dom";
+import { Box, Typography, Button, Container } from "@mui/material";
+import {
+  Dashboard as DashboardIcon,
+  Inventory2 as ProductsIcon,
+  ShoppingCart as OrdersIcon,
+  People as UsersIcon,
+  Logout as LogoutIcon,
+} from "@mui/icons-material";
+import SendIcon from "@mui/icons-material/Send";
+import admin from "../assets/admin.png";
+
+import { Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { openSnackbar } from "../redux/snackBarSlice";
+import { useState } from "react";
 
 function Layout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  const activeStyle = {
-    backgroundColor: "#333",
-    color: "#fff",
-    fontSize: "20px",
-    padding: "8px 16px",
-    textDecoration: "none",
-    borderRadius: "5px",
+  const navItems = [
+    {
+      label: "Dashboard",
+      path: "/admin/adminDashboard",
+      icon: <DashboardIcon />,
+    },
+    {
+      label: "Products",
+      path: "/admin/manageProducts",
+      icon: <ProductsIcon />,
+    },
+    { label: "Orders", path: "/admin/manageOrders", icon: <OrdersIcon /> },
+    { label: "Users", path: "/admin/manageUsers", icon: <UsersIcon /> },
+    {
+      label: "NewsLetter",
+      path: "/admin/manageNewsletter",
+      icon: <SendIcon />,
+    },
+  ];
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    dispatch(
+      openSnackbar({ massage: "Logout Successfully", severity: "success" })
+    );
+    navigate("/login");
   };
 
-  const inactiveStyle = {
-    color: "#fff",
-    fontSize: "20px",
-    cursor: "pointer",
-    textDecoration: "none",
-    padding: "8px 16px",
-  };
+  const isActive = (path) => location.pathname === path;
 
   return (
     <>
-      <Grid
-        container
-        sx={{
-          width: "100%",
-          height: "100vh",
-        }}
-      >
+      <Container maxWidth={false} disableGutters>
         <Box
+          onMouseEnter={() => setSidebarOpen(true)}
+          onMouseLeave={() => setSidebarOpen(false)}
           sx={{
-            width: "20%",
+            width: sidebarOpen ? 220 : 70,
+            backgroundColor: "#000",
+            color: "#fff",
             height: "100%",
             position: "fixed",
             left: 0,
+            p: 2,
+            display: "flex",
+            flexDirection: "column",
+            gap: 3,
+            transition: "width 0.3s",
+            zIndex: 1200,
           }}
         >
           <Box
             sx={{
-              backgroundColor: "black",
-              height: "100%",
-              padding: 2,
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <img src={admin} alt="" width={50} />
+          </Box>
+          <Box
+            sx={{
               display: "flex",
               flexDirection: "column",
-              gap: 6,
+              justifyContent: "center",
+              gap: 2,
+              mt: 2,
             }}
           >
-            <Box>
-              <Typography
-                variant="h5"
-                sx={{
-                  color: "#fff",
-                  fontSize: 33,
-                  fontWeight: "bold",
-                }}
-              >
-                Admin Dashboard
-              </Typography>
-            </Box>
-            <Box
+            {navItems.map(({ label, path, icon }) => {
+              return (
+                <Button
+                  key={label}
+                  onClick={() => navigate(path)}
+                  sx={{
+                    backgroundColor:
+                      sidebarOpen && isActive(path) ? "#333" : "transparent",
+                    color: "#fff",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: sidebarOpen ? "flex-start" : "center",
+                    borderRadius: sidebarOpen ? 1 : 10,
+                    textTransform: "none",
+                    minWidth: 0,
+                    width: "100%",
+                  }}
+                >
+                  <Box
+                    sx={{
+                      backgroundColor:
+                        !sidebarOpen && isActive(path) ? "#333" : "transparent",
+                      borderRadius: "50%",
+                      p: 2,
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {icon}
+                  </Box>
+                  {sidebarOpen && (
+                    <Typography variant="" sx={{ ml: 1, fontSize: 16 }}>
+                      {label}
+                    </Typography>
+                  )}
+                </Button>
+              );
+            })}
+          </Box>
+
+          <Box sx={{ mt: "auto" }}>
+            <Button
+              onClick={handleLogout}
+              variant="contained"
+              color="error"
+              fullWidth
               sx={{
-                width: "100%",
+                borderRadius: 10,
+                justifyContent: sidebarOpen ? "flex-start" : "center",
+                px: sidebarOpen ? 2 : 0,
+                minWidth: 0,
                 display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                gap: 3,
+                alignItems: "center",
+                gap: sidebarOpen ? 1 : 0,
               }}
             >
-              <NavLink
-                to="/admin/adminDashboard"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                <Typography variant="">DashBoard</Typography>
-              </NavLink>
-
-              <NavLink
-                to="/admin/manageProducts"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                <Typography variant="">Products</Typography>
-              </NavLink>
-
-              <NavLink
-                to="/admin/manageOrders"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                <Typography variant="">Orders</Typography>
-              </NavLink>
-
-              <NavLink
-                to="/admin/manageUsers"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                <Typography variant="">Users</Typography>
-              </NavLink>
-            </Box>
-            <Box
-              sx={{
-                position: "fixed",
-                bottom: "10px",
-              }}
-            >
-              <Button
-                onClick={() => {
-                  dispatch(
-                    openSnackbar({
-                      message: "Logout Successfully",
-                      severity: "success",
-                    })
-                  );
-                  localStorage.removeItem("token");
-                  navigate("/login");
-                }}
-                variant="contained"
-                sx={{
-                  borderRadius: 10,
-                }}
-                color="error"
-              >
-                Logout
-              </Button>
-            </Box>
+              <LogoutIcon />
+              {sidebarOpen && "Logout"}
+            </Button>
           </Box>
         </Box>
+
         <Box
           sx={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            justifyContent: "flex-end",
+            width: "auto",
+            ml: sidebarOpen ? "220px" : "70px",
+            transition: "margin 0.3s",
           }}
         >
-          <Box
-            sx={{
-              height: "auto",
-              width: "80%",
-            }}
-          >
+          <Box>
             <Outlet />
           </Box>
         </Box>
-      </Grid>
+      </Container>
     </>
   );
 }

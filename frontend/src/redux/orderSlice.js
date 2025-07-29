@@ -23,9 +23,10 @@ const orderSlice = createSlice({
                 state.loading = true;
                 state.error = null;
             })
-            .addCase(addOrderData.fulfilled, (state, action) => {
+            .addCase(addOrderData.fulfilled, (state) => {
                 state.loading = false;
-                state.total = action.payload.newOrder.total
+                // console.log(action.payload);
+                // state.total = action.payload.newOrder.total
             })
             .addCase(addOrderData.rejected, (state, action) => {
                 state.loading = false;

@@ -11,9 +11,8 @@ export const PublicRoute = () => {
   useEffect(() => {
     if (token) {
       dispatch(fetchUser());
-    } else {
     }
-  }, [dispatch]);
+  }, [dispatch, token]);
 
   if (token && user?.role === "admin") {
     return <Navigate to="/admin/adminDashboard" />;

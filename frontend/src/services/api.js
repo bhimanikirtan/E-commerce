@@ -4,7 +4,6 @@ const api = axios.create({
   baseURL: `${baseURL}`,
 });
 
-
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -18,6 +17,3 @@ api.interceptors.request.use(
   }
 );
 export default api;
-
-
-

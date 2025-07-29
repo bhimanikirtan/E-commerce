@@ -19,6 +19,12 @@ import MyAddress from "../components/profile/myAddress";
 import MyOrders from "../components/profile/myOrders";
 import ForgotPassword from "../components/password/forgotPassword";
 import ResetPassword from "../components/password/resetPassword";
+import MyWishlist from "../components/profile/myWishlist";
+import DashboardCharts from "../admin/dashBoardCharts";
+import NewsLetter from "../admin/newsLetter";
+import MySubscription from "../components/profile/mySubscription";
+import OrderSuccessPage from "../pages/orderSuccess";
+import SubscribSuccessPage from "../pages/subscribeSuccess";
 
 const RoutesComponent = () => {
   return (
@@ -35,17 +41,26 @@ const RoutesComponent = () => {
           <Route path="/productDetail/:id" element={<ProductDetail />} />
           <Route path="/categoryPage" element={<CategoryPage />} />
           <Route path="/cart" element={<Cart />} />
-          <Route path="/checkOut" element={<CheckOut />} />
+          <Route path="/checkout" element={<CheckOut />} />
+          <Route path="/orderSuccess" element={<OrderSuccessPage />} />
+          <Route path="/subscribSuccess" element={<SubscribSuccessPage />} />
           <Route element={<Layout />}>
             <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/manageProducts" element={<ManageProducts />} />
             <Route path="/admin/manageOrders" element={<ManageOrders />} />
             <Route path="/admin/manageUsers" element={<ManageUsers />} />
+            <Route path="/admin/manageNewsLetter" element={<NewsLetter />} />
+            <Route path="/dashBoardCharts" element={<DashboardCharts />} />
           </Route>
           <Route element={<UserProfileLayout />}>
             <Route path="/profile/myProfile" element={<ProfilePage />} />
             <Route path="/profile/myAddress" element={<MyAddress />} />
             <Route path="/profile/myOrders" element={<MyOrders />} />
+            <Route path="/profile/myWishlist" element={<MyWishlist />} />
+            <Route
+              path="/profile/mySubscription"
+              element={<MySubscription />}
+            />
           </Route>
         </Route>
       </Routes>

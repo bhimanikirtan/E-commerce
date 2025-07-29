@@ -1,18 +1,13 @@
-import { Box, Grid, Rating, Typography } from "@mui/material";
+import { Box, Container, Grid, Rating, Typography } from "@mui/material";
 import GreenTik from "../assets/greentik.png";
 import moment from "moment";
 
-const RatingCard = ({ item, width }) => {
+const RatingCard = ({ item}) => {
   return (
-    <Grid
-      container
-      sx={{
-        height: "auto",
-      }}
-    >
+     <Container maxWidth={false} disableGutters>
       <Box
         sx={{
-          width: width || "400px",
+          width: "auto",
           height: "220px",
           borderRadius: "10px",
           border: "2px solid #ccc",
@@ -47,7 +42,7 @@ const RatingCard = ({ item, width }) => {
           {moment(item.createdAt).format("MMMM Do YYYY, h:mm:ss a")}
         </Typography>
       </Box>
-    </Grid>
+    </Container>
   );
 };
 export default RatingCard;

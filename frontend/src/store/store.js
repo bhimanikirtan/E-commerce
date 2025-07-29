@@ -5,7 +5,10 @@ import snackBarReducer from "../redux/snackBarSlice";
 import cartReducer from "../redux/cartSlice";
 import orderReducer from "../redux/orderSlice";
 import ratingReducer from "../redux/ratingSlice";
+import wishlistReducer from "../redux/wishlistSlice";
 import adminReducer from "../redux/adminSlice";
+import paymentReducer from "../redux/paymentSlice";
+import newSletterReducer from "../redux/newSletterSlice";
 
 export const store = configureStore({
   reducer: {
@@ -15,6 +18,9 @@ export const store = configureStore({
     cart: cartReducer,
     order: orderReducer,
     admin: adminReducer,
-    rating: ratingReducer
+    rating: ratingReducer,
+    wishList: wishlistReducer,
+    newSletter: newSletterReducer,
+    payment: paymentReducer,
   },
 });

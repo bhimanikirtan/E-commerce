@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 import {
   Box,
   Button,
   Container,
-  CssBaseline,
   Grid,
   TextField,
   Typography,
@@ -57,23 +56,19 @@ export default function LoginPage() {
           navigate("/");
         }
       } catch (error) {
-        console.log(error)
+        console.log(error);
       }
     },
   });
   return (
     <>
-      <Container
-        component="main"
-        maxWidth={isMobile ? "sm" : isTab ? "md" : "xl"}
-      >
-        <CssBaseline />
-
-        <Grid
-          container
-          spacing={0}
+      <Container maxWidth={false} disableGutters>
+        <Box
           sx={{
             width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            gap: 10,
           }}
         >
           <Box
@@ -90,7 +85,6 @@ export default function LoginPage() {
           <Box
             sx={{
               width: "100%",
-              height: isMobile ? "400px" : "600px",
               display: "flex",
               justifyContent: "center",
               alignItems: "center",
@@ -98,12 +92,20 @@ export default function LoginPage() {
           >
             <Box
               sx={{
-                width: isMobile ? "80%" : isTab ? "50%" : "30%",
+                width: "100%",
+                display: "flex",
+                justifyContent: "center",
               }}
             >
               <Box
                 sx={{
-                  width: "100%",
+                  width: {
+                    xs: "90%",
+                    sm: "60%",
+                    md: "50%",
+                    lg: "40%",
+                    xl: "30%",
+                  },
                   border: "2px solid black",
                   borderRadius: 3,
                   p: isMobile ? 2 : isTab ? 2 : 4,
@@ -226,7 +228,7 @@ export default function LoginPage() {
               </Box>
             </Box>
           </Box>
-        </Grid>
+        </Box>
       </Container>
     </>
   );

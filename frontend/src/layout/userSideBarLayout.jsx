@@ -1,20 +1,28 @@
-import { Grid, Box, Typography } from "@mui/material";
+import { Box, Chip, Container, IconButton, Tooltip } from "@mui/material";
 import { Outlet, NavLink, useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar } from "../redux/snackBarSlice";
 import Header from "../components/header/header";
+import LogoutIcon from "@mui/icons-material/Logout";
+import { Brightness4, Brightness7 } from "@mui/icons-material";
+import { useThemeContext } from "../context/themeContext";
+import { fetchUser } from "../redux/authSlice";
+import { useEffect } from "react";
 
 function UserProfileLayout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
+  const { user } = useSelector((state) => state.auth);
+  const { mode, toggleTheme } = useThemeContext();
+  useEffect(() => {
+    dispatch(fetchUser());
+  }, [dispatch]);
   const activeStyle = {
     backgroundColor: "#333",
     color: "#fff",
     fontSize: "20px",
     padding: "8px 16px",
     textDecoration: "none",
-    borderRadius: "5px",
   };
 
   const inactiveStyle = {
@@ -27,86 +35,101 @@ function UserProfileLayout() {
   return (
     <>
       <Header />
-      <Grid container sx={{ width: "100%" }}>
-        <Grid
+      <Container maxWidth={false} disableGutters>
+        <Box
           sx={{
-            width: "20%",
-            height: "100%",
-            position: "fixed",
-            left: 0,
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
           }}
         >
           <Box
             sx={{
-              backgroundColor: "#000",
-              height: "100%",
-              padding: 2,
-              display: "flex",
-              flexDirection: "column",
-              gap: 5,
-              color: "#fff",
+              width: "auto",
             }}
           >
-            <Box>
-              <Typography
-                variant="h4"
-                sx={{ color: "#fff", fontWeight: "bold" }}
-              >
-                My Profile
-              </Typography>
-            </Box>
-
             <Box
               sx={{
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-                flexDirection: "column",
-                gap: 3,
+                backgroundColor: "#000",
+                padding: 2,
+                display: { xs: "block", ssm: "block", sm: "flex" },
               }}
             >
-              <NavLink
-                to="/profile/myProfile"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  flexWrap: "wrap",
+                  justifyContent: { xs: "center", sm: "flex-start" },
+                  flexDirection: "row",
+                  gap: 2,
+                }}
               >
-                DashBoard
-              </NavLink>
-              <NavLink
-                to="/profile/myAddress"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                My Address
-              </NavLink>
-              <NavLink
-                to="/profile/myOrders"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                My Orders
-              </NavLink>
-              <NavLink
-                to="/profile/myPayments"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                My Payments
-              </NavLink>
-              <NavLink
-                to="/profile/myWallet"
-                style={({ isActive }) =>
-                  isActive ? activeStyle : inactiveStyle
-                }
-              >
-                My Wallet
-              </NavLink>
+                <NavLink
+                  to="/profile/myProfile"
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : inactiveStyle
+                  }
+                >
+                  DashBoard
+                </NavLink>
+                <NavLink
+                  to="/profile/myAddress"
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : inactiveStyle
+                  }
+                >
+                  My Address
+                </NavLink>
+                <NavLink
+                  to="/profile/myOrders"
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : inactiveStyle
+                  }
+                >
+                  My Orders
+                </NavLink>
+                {user?.isSubscribe !== "free" && (
+                  <NavLink
+                    to="/profile/myWishlist"
+                    style={({ isActive }) =>
+                      isActive ? activeStyle : inactiveStyle
+                    }
+                  >
+                    My Wishlist
+                  </NavLink>
+                )}
+                <NavLink
+                  to="/profile/mySubscription"
+                  style={({ isActive }) =>
+                    isActive ? activeStyle : inactiveStyle
+                  }
+                >
+                  My Subscription
+                </NavLink>
+              </Box>
 
-              <Typography
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {user ? (
+                  user.isSubscribe === "basic" ? (
+                    <Chip label="Basic Plan" color="warning" />
+                  ) : user.isSubscribe === "premium" ? (
+                    <Chip label="Premium Plan" color="success" />
+                  ) : (
+                    <Chip label="No Active Plan" color="info" />
+                  )
+                ) : (
+                  <></>
+                )}
+              </Box>
+
+              <IconButton
                 onClick={() => {
                   dispatch(
                     openSnackbar({
@@ -117,30 +140,32 @@ function UserProfileLayout() {
                   localStorage.removeItem("token");
                   navigate("/login");
                 }}
-                sx={{
-                  color: "#fff",
-                  fontSize: 20,
-                  cursor: "pointer",
-                }}
               >
-                Logout
-              </Typography>
+                <LogoutIcon color="error" />
+              </IconButton>
+              <Tooltip title="Toggle Theme">
+                <IconButton onClick={toggleTheme}>
+                  {mode === "dark" ? (
+                    <Brightness7 sx={{ color: "#ffffff" }} />
+                  ) : (
+                    <Brightness4 sx={{ color: "#ffffff" }} />
+                  )}
+                </IconButton>
+              </Tooltip>
             </Box>
           </Box>
-        </Grid>
 
-        <Grid sx={{ width: "80%", right: 0 }}>
-          <Box
-            sx={{
-              ml: 35,
-              width: "100%",
-              height: "100%",
-            }}
-          >
-            <Outlet />
+          <Box sx={{ width: "100%" }}>
+            <Box
+              sx={{
+                width: "auto",
+              }}
+            >
+              <Outlet />
+            </Box>
           </Box>
-        </Grid>
-      </Grid>
+        </Box>
+      </Container>
     </>
   );
 }

@@ -10,7 +10,7 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
-import { addAddress, updateAddress } from "../../redux/authSlice";
+import { addAddress, getAddress, updateAddress } from "../../redux/authSlice";
 import { useEffect } from "react";
 
 function AddAddress({ open, onClose, editData, editId, editAddMode }) {
@@ -18,10 +18,9 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
   const validationSchema = yup.object({
     address: yup.string().required("address is required"),
     city: yup.string().required("city is required"),
-
     pincode: yup.string().required("pincode is required"),
-
     country: yup.string().required("country is required"),
+    state: yup.string().required("state is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -29,22 +28,19 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
       city: "",
       pincode: "",
       country: "",
+      state: "",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
         if (editAddMode && editData) {
-          await dispatch(updateAddress({ id: editId, values: values }))
-            .unwrap()
-            .then(onClose());
-
-          onClose();
-          formik.resetForm();
+          await dispatch(updateAddress({ id: editId, values })).unwrap();
         } else {
           await dispatch(addAddress(values)).unwrap();
-          onClose();
-          formik.resetForm();
         }
+        formik.resetForm();
+        onClose();
+        await dispatch(getAddress()).unwrap();
       } catch (error) {
         console.log(error);
       }
@@ -61,9 +57,10 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
         city: editData.city || "",
         pincode: editData.pincode || "",
         country: editData.country || "",
+        state: editData.state || "",
       });
     }
-  }, [editAddMode, editData, formik]);
+  }, [editAddMode, editData]);
   return (
     <>
       <Dialog open={open} onClose={handleClose}>
@@ -124,7 +121,21 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                   helperText={formik.touched.pincode && formik.errors.pincode}
                 />
               </Box>
-              <Box>
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  gap: 3,
+                }}
+              >
+                <TextField
+                  label="State"
+                  name="state"
+                  value={formik.values.state}
+                  onChange={formik.handleChange}
+                  error={formik.touched.state && Boolean(formik.errors.state)}
+                  helperText={formik.touched.state && formik.errors.state}
+                />
                 <TextField
                   label="Country"
                   name="country"
@@ -134,7 +145,6 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                     formik.touched.country && Boolean(formik.errors.country)
                   }
                   helperText={formik.touched.country && formik.errors.country}
-                  fullWidth
                 />
               </Box>
               <Box
@@ -144,7 +154,11 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                   justifyContent: "flex-end",
                 }}
               >
-                <Button variant="contained" type="submit">
+                <Button
+                  variant="contained"
+                  type="submit"
+                  disabled={formik.isSubmitting}
+                >
                   {editAddMode ? "Update" : "Add"}
                 </Button>
               </Box>

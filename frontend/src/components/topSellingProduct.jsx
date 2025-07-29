@@ -1,36 +1,41 @@
-import { Grid, Typography, Button } from "@mui/material";
-// import { useTheme} from "@mui/material";
 import {
-  // getAllproductsData,
-  getTopSellingProductData,
-} from "../Thunk/productThunk";
+  Grid,
+  Typography,
+  Button,
+  useTheme,
+  useMediaQuery,
+  Container,
+} from "@mui/material";
+import { getAllproductsData } from "../Thunk/productThunk";
 import { useSelector, useDispatch } from "react-redux";
 import ProductCard from "../comon/productCard";
 import { useState, useEffect } from "react";
+
 function TopSellingProduct() {
   const dispatch = useDispatch();
-  const { topSelling } = useSelector((state) => state.products);
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const { products } = useSelector((state) => state.products);
+
+  const topSellingProduct = products.filter(
+    (product) => product.productType === "topSelling"
+  );
+
   const [visible, setVisible] = useState(4);
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   useEffect(() => {
-    dispatch(getTopSellingProductData());
+    dispatch(getAllproductsData({ skip: 0, limit: 41 }));
   }, [dispatch]);
+
   const handleViewAll = () => {
-    setVisible(topSelling.length);
+    setVisible(topSellingProduct.length);
   };
 
-  const displayProducts = topSelling.slice(0, visible);
+  const displayProducts = topSellingProduct.slice(0, visible);
 
   return (
     <>
-      <Grid
-        container
-        spacing={2}
-        sx={{
-          width: "100%",
-        }}
-      >
+      <Container maxWidth={false} disableGutters  sx={{ backgroundColor: theme.palette.background.container }}>
         <Grid
           item
           xs={12}
@@ -42,7 +47,7 @@ function TopSellingProduct() {
             height: "180px",
           }}
         >
-          <Typography variant="h2" component="h2">
+          <Typography variant={isMobile ? "h4" : "h2"} component="h2">
             TOP SELLING
           </Typography>
         </Grid>
@@ -57,7 +62,7 @@ function TopSellingProduct() {
         >
           <Grid
             sx={{
-              width: "90%",
+              width: "100%",
               display: "flex",
               flexDirection: "row",
               flexWrap: "wrap",
@@ -65,8 +70,8 @@ function TopSellingProduct() {
               gap: "20px",
             }}
           >
-            {displayProducts.map((product, index) => (
-              <ProductCard key={index} product={product} />
+            {displayProducts.map((product) => (
+              <ProductCard key={product._id} product={product} />
             ))}
             <Grid
               sx={{
@@ -75,7 +80,7 @@ function TopSellingProduct() {
                 justifyContent: "center",
               }}
             >
-              {visible < topSelling.length && (
+              {visible < topSellingProduct.length && (
                 <Button
                   variant="outlined"
                   className="white"
@@ -92,7 +97,7 @@ function TopSellingProduct() {
             </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      </Container>
     </>
   );
 }

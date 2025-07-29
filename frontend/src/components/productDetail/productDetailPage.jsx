@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import {
-  Breadcrumbs,
   Container,
-  Grid,
-  Link,
   Typography,
   Box,
   Chip,
@@ -11,43 +8,41 @@ import {
   Button,
   Skeleton,
   Rating,
+  CircularProgress,
 } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
 import AddIcon from "@mui/icons-material/Add";
 import RemoveIcon from "@mui/icons-material/Remove";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import {
-  getOneproductData,
-  getTopSellingProductData,
-} from "../../Thunk/productThunk";
+import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
+import FavoriteIcon from "@mui/icons-material/Favorite";
+import { getAllproductsData } from "../../Thunk/productThunk";
 import { addToCartData } from "../../Thunk/cartThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import ProductCard from "../../comon/productCard";
-import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import Header from "../header/header";
 import Footer from "../footer/footer";
-import img1 from "../../assets/image 1.png";
-import img2 from "../../assets/image 2.png";
-import img3 from "../../assets/image 3.png";
 import { openSnackbar } from "../../redux/snackBarSlice";
 import { getOneProductRatingData } from "../../Thunk/ratingThunk";
 import RatingCard from "../../comon/ratingCard";
+import ProductCard from "../../comon/productCard";
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
-  const product = useSelector((state) => state.products.selectedProduct);
-  const { topSelling } = useSelector((state) => state.products);
   const { OneProductRatingData } = useSelector((state) => state.rating);
   const { id } = useParams();
+  const { products } = useSelector((state) => state.products);
+  const selectedProduct = products.find((p) => p._id === id);
+  const newProducts = products.slice(0, 4);
+  console.log("selectedProduct", selectedProduct);
+  useEffect(() => {
+    dispatch(getAllproductsData({}));
+  }, [dispatch]);
 
   useEffect(() => {
-    dispatch(getTopSellingProductData());
     dispatch(getOneProductRatingData(id));
-    dispatch(getOneproductData(id));
   }, [dispatch, id]);
 
   const handlePlus = () => {
@@ -75,13 +70,13 @@ function ProductDetailPage() {
     } else {
       dispatch(
         openSnackbar({
-          massage: `${product.name}add to Cart`,
+          massage: `${selectedProduct.name}add to Cart`,
           severity: "success",
         })
       );
       dispatch(
         addToCartData({
-          productId: product._id,
+          productId: selectedProduct._id,
           quantity,
           size: selectedSize,
           color: selectedColor,
@@ -95,241 +90,255 @@ function ProductDetailPage() {
   const handleChangeSize = (name) => {
     setSelectedSize(name);
   };
-
-  const breadcrumbs = [
-    <Link underline="hover" key="1" color="inherit" href="/">
-      HOME
-    </Link>,
-    <Link underline="hover" key="2" color="inherit" href="/">
-      Shop
-    </Link>,
-    <Link underline="hover" key="2" color="inherit" href="/">
-      Men
-    </Link>,
-    <Typography key="3" sx={{ color: "text.primary" }}>
-      T-shirts
-    </Typography>,
-  ];
   return (
     <>
       <Header />
-      <Container maxWidth="xl">
-        <Grid container>
-          <Box
-            sx={{
-              width: "100%",
-            }}
-          >
-            <Breadcrumbs
-              separator={<NavigateNextIcon fontSize="small" />}
-              aria-label="breadcrumb"
-            >
-              {breadcrumbs}
-            </Breadcrumbs>
-          </Box>
-          {product ? (
+      <Container maxWidth={false} disableGutters>
+        <Box
+          sx={{
+            width: "auto",
+          }}
+        >
+          {selectedProduct ? (
             <Box
               sx={{
                 width: "100%",
                 display: "flex",
-                flexWrap: "wrap",
-                gap: "20px",
+                justifyContent: "center",
+                flexDirection: {
+                  xs: "column",
+                  ssm: "column",
+                  sm: "column",
+                  md: "row",
+                  lg: "row",
+                  xl: "row",
+                  xxl: "row",
+                },
+                gap: "10px",
                 mt: "30px",
               }}
             >
               <Box
                 sx={{
-                  width: "50%",
+                  width: {
+                    xs: "100%",
+                    sm: "100%",
+                    md: "50%",
+                    lg: "45%",
+                    xl: "40%",
+                  },
                   display: "flex",
-                  gap: 3,
+                  justifyContent: "center",
+                  position: "relative",
                 }}
               >
-                <Box
+                <img
+                  src={`http://192.168.2.222:5000/${selectedProduct.image}`}
+                  style={{
+                    width: "90%",
+                  }}
+                  alt=""
+                />
+                <IconButton
                   sx={{
-                    width: "152px",
-                    display: "flex",
-                    flexDirection: "column",
-                    gap: "10px",
+                    position: "absolute",
+                    top: { xs: "15px", sm: "30px", md: "30px", lg: "40px" },
+                    right: { xs: "30px", sm: "70px", md: "50px", lg: "70px" },
                   }}
                 >
-                  <img src={img1} alt="" />
-                  <img src={img2} alt="" />
-                  <img src={img3} alt="" />
-                </Box>
-                <Box
-                  sx={{
-                    width: "70%",
-                  }}
-                >
-                  <img
-                    src={`http://192.168.2.222:5000/${product.image}`}
-                    style={{
-                      width: "100%",
-                    }}
-                    alt=""
-                  />
-                </Box>
+                  {selectedProduct.isLiked ? (
+                    <FavoriteIcon color="error" />
+                  ) : (
+                    <FavoriteBorderIcon color="primary" />
+                  )}
+                </IconButton>
               </Box>
               <Box
                 sx={{
-                  width: "40%",
+                  width: {
+                    xs: "100%",
+                    sm: "100%",
+                    md: "50%",
+                    lg: "50%",
+                    xl: "50%",
+                  },
                   display: "flex",
-                  flexDirection: "column",
-                  gap: 2,
+                  justifyContent: "center",
                 }}
               >
-                <Box>
-                  <Typography variant="h4">{product.name}</Typography>
-                </Box>
                 <Box
                   sx={{
+                    width: "90%",
                     display: "flex",
-                    alignItems: "center",
-                    gap: 1,
+                    flexDirection: "column",
+                    gap: 2,
                   }}
                 >
-                  <Rating
-                    name="read-only"
-                    value={Number(product.rating?.toFixed(1))}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography variant="h6">
-                    {Number(product.rating?.toFixed(1))}
-                  </Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "10px",
-                    alignItems: "center",
-                  }}
-                >
-                  <Typography variant="h4">${product.price}</Typography>
-                  <Typography
-                    variant="h5"
-                    sx={{
-                      textDecoration: "line-through",
-                      color: "text.disabled",
-                    }}
-                  >
-                    $300
-                  </Typography>
-
-                  <Chip label="- 40%" color="error" />
-                </Box>
-                <Box>
-                  <Typography variant="body1">{product.description}</Typography>
-                </Box>
-                <Divider />
-                <Box>
-                  <Typography>Select Colors</Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "10px",
-                  }}
-                >
+                  <Box>
+                    <Typography variant="h4">{selectedProduct.name}</Typography>
+                  </Box>
                   <Box
                     sx={{
                       display: "flex",
-                      flexDirection: "row",
+                      alignItems: "center",
                       gap: 1,
                     }}
                   >
-                    {product.color?.map((color, index) => (
-                      <Box
-                        value={selectedColor}
-                        key={index}
-                        required
-                        onClick={() => handleChangeColor(color)}
-                        sx={{
-                          border:
-                            selectedColor === color ? "2px solid black" : "",
-                          backgroundColor: color,
-                          borderRadius: "50%",
-                          width: "30px",
-                          height: "30px",
-                          cursor: "pointer",
-                        }}
-                      ></Box>
-                    ))}
+                    {selectedProduct.rating == null ? (
+                      <Typography variant="h6">No rating</Typography>
+                    ) : (
+                      <>
+                        <Rating
+                          name="read-only"
+                          value={Number(selectedProduct.rating?.toFixed(1))}
+                          precision={0.5}
+                          readOnly
+                        />
+                        <Typography variant="h6">
+                          {selectedProduct.rating?.toFixed(1)}/5
+                        </Typography>
+                      </>
+                    )}
                   </Box>
-                </Box>
-                <Divider />
-                <Box>
-                  <Typography variant="body1">Choose Size</Typography>
-                </Box>
-                <Box
-                  sx={{
-                    display: "flex",
-                    gap: "10px",
-                  }}
-                >
-                  {product.size?.map((name, index) => (
-                    <Chip
-                      clickable
-                      onClick={() => handleChangeSize(name)}
-                      value={selectedSize}
-                      key={index}
-                      label={name}
-                      color={selectedSize === name ? "primary" : "default"}
-                    />
-                  ))}
-                </Box>
-                <Divider />
-                <Box
-                  sx={{
-                    display: "flex",
-                    flexDirection: "row",
-                    gap: "20px",
-                  }}
-                >
                   <Box
                     sx={{
-                      width: "20%",
                       display: "flex",
                       flexDirection: "row",
+                      gap: "10px",
                       alignItems: "center",
-                      backgroundColor: "#f0f0f0",
-                      borderRadius: "62px",
-                      justifyContent: "space-between",
-                      p: 1,
                     }}
                   >
-                    <IconButton onClick={handleMins} size="small">
-                      <RemoveIcon />
-                    </IconButton>
-
-                    <Typography variant="body1">{quantity}</Typography>
-
-                    <IconButton onClick={handlePlus} size="small">
-                      <AddIcon />
-                    </IconButton>
-                  </Box>
-
-                  <Box
-                    sx={{
-                      width: "80%",
-                    }}
-                  >
-                    <Button
-                      variant="contained"
-                      className="black"
-                      onClick={() => {
-                        handleSubmit();
-                      }}
+                    <Typography variant="h4">
+                      ${selectedProduct.price}
+                    </Typography>
+                    <Typography
+                      variant="h5"
                       sx={{
-                        width: "100%",
-                        height: "100%",
-                        borderRadius: "62px",
+                        textDecoration: "line-through",
+                        color: "text.disabled",
                       }}
                     >
-                      Add to Cart
-                    </Button>
+                      $300
+                    </Typography>
+
+                    <Chip label="- 40%" color="error" />
+                  </Box>
+                  <Box>
+                    <Typography variant="body1">
+                      {selectedProduct.description}
+                    </Typography>
+                  </Box>
+                  <Divider />
+                  <Box>
+                    <Typography>Select Colors</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "10px",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        display: "flex",
+                        flexDirection: "row",
+                        gap: 1,
+                      }}
+                    >
+                      {selectedProduct.color?.map((color, index) => (
+                        <Box
+                          value={selectedColor}
+                          key={index}
+                          required
+                          onClick={() => handleChangeColor(color)}
+                          sx={{
+                            border:
+                              selectedColor === color ? "2px solid black" : "",
+                            backgroundColor: color,
+                            borderRadius: "50%",
+                            width: "30px",
+                            height: "30px",
+                            cursor: "pointer",
+                          }}
+                        ></Box>
+                      ))}
+                    </Box>
+                  </Box>
+                  <Divider />
+                  <Box>
+                    <Typography variant="body1">Choose Size</Typography>
+                  </Box>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      gap: "10px",
+                    }}
+                  >
+                    {selectedProduct.size?.map((name, index) => (
+                      <Chip
+                        clickable
+                        onClick={() => handleChangeSize(name)}
+                        value={selectedSize}
+                        key={index}
+                        label={name}
+                        color={selectedSize === name ? "primary" : "default"}
+                      />
+                    ))}
+                  </Box>
+                  <Divider />
+                  <Box
+                    sx={{
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "20px",
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: "auto",
+                        display: "flex",
+                        flexDirection: "row",
+                        alignItems: "center",
+                        backgroundColor: "#f0f0f0",
+                        borderRadius: "62px",
+                        justifyContent: "space-between",
+                        p: 1,
+                      }}
+                    >
+                      <IconButton onClick={handleMins} size="small">
+                        <RemoveIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+
+                      <Typography variant="body1" sx={{ color: "#000000" }}>
+                        {quantity}
+                      </Typography>
+
+                      <IconButton onClick={handlePlus} size="small">
+                        <AddIcon sx={{ color: "#000000" }} />
+                      </IconButton>
+                    </Box>
+
+                    <Box
+                      sx={{
+                        width: "80%",
+                      }}
+                    >
+                      <Button
+                        variant="contained"
+                        className="black"
+                        onClick={() => {
+                          handleSubmit();
+                        }}
+                        sx={{
+                          width: "100%",
+                          height: "100%",
+                          borderRadius: "62px",
+                        }}
+                      >
+                        Add to Cart
+                      </Button>
+                    </Box>
                   </Box>
                 </Box>
               </Box>
@@ -338,68 +347,32 @@ function ProductDetailPage() {
             <>
               <Box
                 sx={{
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "center",
                   width: "100%",
-                  gap: 2,
+                  height: "80vh",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
                 }}
               >
-                <Box sx={{ width: "50%" }}>
-                  <Skeleton
-                    variant="rectangular"
-                    width="100%"
-                    sx={{
-                      borderRadius: 7,
-                    }}
-                  >
-                    <div style={{ height: "550PX" }} />
-                  </Skeleton>
-                </Box>
-                <Box sx={{ width: "60%" }}>
-                  <Skeleton width="100%">
-                    <div style={{ height: "80PX" }} />
-                  </Skeleton>
-                  <Skeleton width="30%">
-                    <div style={{ height: "50PX" }} />
-                  </Skeleton>
-                  <Skeleton width="40%">
-                    <div style={{ height: "70PX" }} />
-                  </Skeleton>
-                  <Skeleton width="70%">
-                    <div style={{ height: "50PX" }} />
-                  </Skeleton>
-                  <Skeleton width="30%">
-                    <div style={{ height: "70PX" }} />
-                  </Skeleton>
-                  <Skeleton width="60%">
-                    <div style={{ height: "70PX" }} />
-                  </Skeleton>
-                  <Skeleton width="100%">
-                    <div style={{ height: "100PX" }} />
-                  </Skeleton>
-                </Box>
+                <CircularProgress size={80} color="primary" />
               </Box>
             </>
           )}
-          <Grid
-            container
-            spacing={5}
+          <Box
             sx={{
-              width: "100%",
+              width: "auto",
               mt: 5,
               justifyContent: "center",
             }}
           >
-            <Grid
-              container
+            <Box
               sx={{
-                width: "100%",
+                width: "auto",
               }}
             >
-              <Grid
+              <Box
                 sx={{
-                  width: "50%",
+                  width: "auto",
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "flex-start",
@@ -409,72 +382,33 @@ function ProductDetailPage() {
                 <Typography variant="h5">
                   ({OneProductRatingData.length})
                 </Typography>
-              </Grid>
-              <Grid
-                sx={{
-                  width: "45%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "flex-end",
-                  alignItems: "center",
-                  gap: 2,
-                }}
-              >
-                <Grid
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                  }}
-                >
-                  <img
-                    // src={filter}
-                    style={{
-                      width: "100%",
-                    }}
-                    alt=""
-                  />
-                </Grid>
-                <Grid>
-                  <Chip
-                    sx={{
-                      px: 3,
-                      py: 3,
-                      borderRadius: 6,
-                    }}
-                    label="Latest"
-                    deleteIcon={<KeyboardArrowDownIcon />}
-                  />
-                </Grid>
-                <Grid>
-                  <Button
-                    sx={{
-                      px: 3,
-                      py: 1.5,
-                      borderRadius: 6,
-                    }}
-                    variant="contained"
-                    className="black"
-                  >
-                    Write a Review
-                  </Button>
-                </Grid>
-              </Grid>
-            </Grid>
-            <Grid
-              container
-              spacing={2}
+              </Box>
+            </Box>
+            <Box
               sx={{
-                width: "95%",
+                width: "auto",
+                display: "flex",
+                flexDirection: {
+                  xs: "column",
+                  ssm: "column",
+                  sm: "column",
+                  md: "row",
+                  lg: "row",
+                  xl: "row",
+                  xxl: "row",
+                },
+                gap: 2,
+                justifyContent: "center",
               }}
             >
               {OneProductRatingData.map((item) => (
-                <RatingCard key={item.id} item={item} width={600} />
+                <RatingCard key={item.id} item={item} />
               ))}
-            </Grid>
-          </Grid>
+            </Box>
+          </Box>
           <Box
             sx={{
-              width: "100%",
+              width: "auto",
             }}
           >
             <Box
@@ -486,7 +420,7 @@ function ProductDetailPage() {
                 height: "180px",
               }}
             >
-              <Typography variant="h2" component="h2">
+              <Typography variant="h4" component="h2">
                 You might also like
               </Typography>
             </Box>
@@ -507,32 +441,13 @@ function ProductDetailPage() {
                   gap: "20px",
                 }}
               >
-                {topSelling.map((product, index) => (
+                {newProducts.map((product, index) => (
                   <ProductCard key={index} product={product} />
                 ))}
-                <Box
-                  sx={{
-                    width: "100%",
-                    display: "flex",
-                    justifyContent: "center",
-                  }}
-                >
-                  <Button
-                    variant="outlined"
-                    className="white"
-                    sx={{
-                      width: "20%",
-                      p: 1.5,
-                      borderRadius: 10,
-                    }}
-                  >
-                    View All
-                  </Button>
-                </Box>
               </Box>
             </Box>
           </Box>
-        </Grid>
+        </Box>
       </Container>
       <Footer />
     </>

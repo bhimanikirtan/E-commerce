@@ -1,4 +1,14 @@
-import { Box, Button, Divider, Grid, Rating, Typography } from "@mui/material";
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  keyframes,
+  Rating,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@mui/material";
 import Header from "../components/header/header";
 import Footer from "../components/footer/footer";
 import hero from "../assets/hero.jpg";
@@ -9,11 +19,14 @@ import Frame1 from "../assets/Frame 1.png";
 import Frame2 from "../assets/Frame 2 (2).png";
 import Frame3 from "../assets/Frame 3.png";
 import Frame4 from "../assets/Frame 4.png";
-import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import GreenTik from "../assets/greentik.png";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
+  const theme = useTheme();
+  const navigate = useNavigate();
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm", "ssm", "xs"));
+  const isTab = useMediaQuery(theme.breakpoints.down("md"));
   const Review = [
     {
       id: 1,
@@ -34,14 +47,27 @@ function Home() {
         "As someone who's always on the lookout for unique fashion pieces, I'm thrilled to have stumbled upon Shop.co. The selection of clothes is not only diverse but also on-point with the latest trends.",
     },
   ];
+  const fadeIn = keyframes`
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+`;
+
+  const brands = ["VERSACE", "ZARA", "GUCCI", "PRADA", "Calvin Klein"];
   return (
     <>
       <Header />
-      <Grid container spacing={5} sx={{ height: "auto" }}>
+      <Container maxWidth={false} disableGutters>
         <Box
           sx={{
             width: "100%",
-            height: "633px",
+            height: "auto",
             display: "flex",
             flexDirection: "column",
           }}
@@ -50,26 +76,39 @@ function Home() {
             sx={{
               width: "100%",
               display: "flex",
-              flexDirection: "row",
+              flexDirection: {
+                xs: "column",
+                ssm: "column",
+                sm: "column",
+                md: "column",
+                lg: "row",
+                xl: "row",
+                xxl: "row",
+              },
             }}
           >
             <Box
               sx={{
-                width: "50%",
-                backgroundColor: "#F2F0F2",
-                p: 10,
+                width: "auto",
+                backgroundColor: theme.palette.background.primary,
+                p: isMobile ? 2 : 10,
                 display: "flex",
                 flexDirection: "column",
-                gap: 4,
+                gap: isMobile ? 2 : 4,
               }}
             >
               <Box>
-                <Typography variant="h2">
+                <Typography
+                  sx={{
+                    fontWeight: isMobile ? 500 : "",
+                  }}
+                  variant={isMobile ? "h4" : "h3"}
+                >
                   FIND CLOTHES THAT MATCHES YOUR STYLE
                 </Typography>
               </Box>
               <Box>
-                <Typography variant="body1">
+                <Typography variant={isMobile ? "body2" : "body1"}>
                   Browse through our diverse range of meticulously crafted
                   garments, designed to bring out your individuality and cater
                   to your sense of style.
@@ -81,14 +120,16 @@ function Home() {
                 }}
               >
                 <Button
+                  onClick={() => {
+                    navigate("/categoryPage");
+                  }}
                   variant="contained"
                   className="black"
                   sx={{
-                    width: "30%",
+                    width: isMobile ? "100%" : "30%",
                     borderRadius: 10,
-                    p: 1.5,
+                    p: isMobile ? 1 : 1.5,
                   }}
-                  color="primary"
                 >
                   shop now
                 </Button>
@@ -97,115 +138,145 @@ function Home() {
               <Box
                 sx={{
                   display: "flex",
+                  flexWrap: isMobile ? "wrap" : "",
                   flexDirection: "row",
-                  justifyContent: "space-between",
+                  gap: isMobile ? 2 : 8,
+                  justifyContent: "center",
                   width: "100%",
                 }}
               >
                 <Box className="Box">
-                  <Typography variant="h4" sx={{ color: "primary.main" }}>
-                    200 +
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "primary.main" }}>
-                    International Brands
-                  </Typography>
+                  <Typography variant="h4">200 +</Typography>
+                  <Typography variant="body2">International Brands</Typography>
                 </Box>
-                <Divider orientation="vertical" flexItem />
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: isMobile ? "none" : "block" }}
+                />
+
                 <Box className="Box">
-                  <Typography variant="h4" sx={{ color: "primary.main" }}>
-                    2,000 +
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "primary.main" }}>
-                    High-Quality Products
-                  </Typography>
+                  <Typography variant="h4">2,000 +</Typography>
+                  <Typography variant="body2">High-Quality Products</Typography>
                 </Box>
-                <Divider orientation="vertical" flexItem />
+                <Divider
+                  orientation="vertical"
+                  flexItem
+                  sx={{ display: isMobile ? "none" : "block" }}
+                />
+
                 <Box className="Box">
-                  <Typography variant="h4" sx={{ color: "primary.main" }}>
-                    30,000 +
-                  </Typography>
-                  <Typography variant="body2" sx={{ color: "primary.main" }}>
-                    Happy Customers
-                  </Typography>
+                  <Typography variant="h4">30,000 +</Typography>
+                  <Typography variant="body2">Happy Customers</Typography>
                 </Box>
               </Box>
             </Box>
             <Box
               sx={{
-                width: "40%",
-                height: "100%",
+                width: {
+                  xs: "100%",
+                  ssm: "100%",
+                  sm: "100%",
+                  md: "100%",
+                  xl: "50%",
+                  xxl: "50%",
+                },
+                height: {
+                  xs: "600px",
+                  ssm: "400px",
+                  sm: "600px",
+                  md: "700px",
+                  xl: "600px",
+                  xxl: "auto",
+                },
               }}
             >
               <Box
                 sx={{
                   width: "100%",
                   height: "100%",
-                  backgroundImage: `url(${hero})`,
-                  backgroundSize: "cover",
                   position: "relative",
                 }}
               >
-                <img
-                  src={star}
-                  style={{
-                    width: "15%",
-                    height: "15%",
-                    position: "absolute",
-                    top: "50px",
-                    right: "60px",
+                <Box
+                  component="img"
+                  src={hero}
+                  alt="Hero"
+                  sx={{
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "cover",
                   }}
-                  alt=""
                 />
-                <img
+                <Box
+                  component="img"
                   src={star}
-                  style={{
-                    width: "10%",
-                    height: "10%",
+                  alt="Star Top"
+                  sx={{
                     position: "absolute",
-                    bottom: "40%",
+                    width: {
+                      xs: "50px",
+                      ssm: "35px",
+                      sm: "70px",
+                      md: "80px",
+                      xl: "100px",
+                    },
+                    top: "30px",
+                    right: "20px",
+                  }}
+                />
+                <Box
+                  component="img"
+                  src={star}
+                  alt="Star Bottom"
+                  sx={{
+                    position: "absolute",
+                    width: {
+                      xs: "40px",
+                      ssm: "30px",
+                      sm: "50px",
+                      md: "60px",
+                      xl: "80px",
+                    },
+                    bottom: { xs: "60%", sm: "40%" },
                     left: "10px",
                   }}
-                  alt=""
                 />
               </Box>
             </Box>
           </Box>
           <Box
             sx={{
-              width: "100%",
-              height: "122px",
+              width: "auto",
               backgroundColor: "#000",
               display: "flex",
+              flexWrap: "wrap",
               flexDirection: "row",
-              justifyContent: "space-between",
+              justifyContent: "space-around",
+              alignItems: "center",
+              gap: 2,
+              py: 2,
             }}
           >
-            <Box className="logoBox">
-              <Typography variant="h3" sx={{ color: "#fff" }}>
-                VERSACE
-              </Typography>
-            </Box>
-            <Box className="logoBox">
-              <Typography variant="h3" sx={{ color: "#fff" }}>
-                ZARA
-              </Typography>
-            </Box>
-            <Box className="logoBox">
-              <Typography variant="h3" sx={{ color: "#fff" }}>
-                GUCCI
-              </Typography>
-            </Box>
-            <Box className="logoBox">
-              <Typography variant="h3" sx={{ color: "#fff" }}>
-                PRADA
-              </Typography>
-            </Box>
-            <Box className="logoBox">
-              <Typography variant="h3" sx={{ color: "#fff" }}>
-                Calvin Klein
-              </Typography>
-            </Box>
+            {brands.map((brand, index) => (
+              <Box
+                key={brand}
+                sx={{
+                  opacity: 0,
+                  animation: `${fadeIn} 0.5s ease forwards`,
+                  animationDelay: `${index * 0.3}s`,
+                }}
+              >
+                <Typography
+                  variant={isMobile ? "h6" : "h3"}
+                  sx={{ color: "#fff", textAlign: "center" }}
+                >
+                  {brand}
+                </Typography>
+              </Box>
+            ))}
           </Box>
+
           <NewArrivalProduct />
           <TopSellingProduct />
           <Box
@@ -217,30 +288,30 @@ function Home() {
           >
             <Box
               sx={{
-                width: "1239px",
-                height: "866px",
-                backgroundColor: "#f0f0f0",
+                width: "auto",
+                backgroundColor: theme.palette.background.primary,
                 borderRadius: "40px",
                 mt: 6,
               }}
             >
-              <Box sx={{ width: "100%", height: "100%" }}>
+              <Box sx={{ width: "auto" }}>
                 <Box
                   sx={{
+                    p: 3,
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    height: "25%",
+                    height: "auto",
                   }}
                 >
-                  <Typography variant="h3" sx={{ color: "#000" }}>
+                  <Typography variant={isMobile ? "h5" : "h3"}>
                     BROWSE BY DRESS STYLE
                   </Typography>
                 </Box>
                 <Box
                   sx={{
-                    width: "100%",
-                    height: "70%",
+                    p: 5,
+                    width: "auto",
                     display: "flex",
                     flexDirection: "column",
                     gap: 2,
@@ -249,82 +320,77 @@ function Home() {
                   <Box
                     sx={{
                       width: "100%",
-                      height: "289px",
+                      height: "auto",
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: {
+                        xs: "column",
+                        ssm: "column",
+                        sm: "column",
+                        md: "column",
+                        lg: "row",
+                        xl: "row",
+                        xxl: "row",
+                      },
                       justifyContent: "center",
                       gap: "15px",
                     }}
                   >
                     <Box
                       sx={{
-                        width: "407px",
-                        height: "100%",
+                        width: "auto",
                       }}
                     >
-                      <img
+                      <Box
+                        component="img"
                         src={Frame1}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                        }}
                         alt=""
+                        sx={{ width: "100%", height: "100%" }}
                       />
                     </Box>
                     <Box
                       sx={{
-                        width: "684px",
-                        height: "100%",
+                        width: "auto",
                       }}
                     >
-                      <img
+                      <Box
+                        component="img"
                         src={Frame2}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                        }}
                         alt=""
+                        sx={{ width: "100%", height: "100%" }}
                       />
                     </Box>
                   </Box>
                   <Box
                     sx={{
                       width: "100%",
-                      height: "289px",
                       display: "flex",
-                      flexDirection: "row",
+                      flexDirection: { xs: "column", md: "row" },
                       justifyContent: "center",
                       gap: "15px",
                     }}
                   >
                     <Box
                       sx={{
-                        width: "684px",
-                        height: "100%",
+                        width: "auto",
                       }}
                     >
-                      <img
+                      <Box
+                        component="img"
                         src={Frame3}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                        }}
                         alt=""
+                        sx={{ width: "100%", height: "100%" }}
                       />
                     </Box>
                     <Box
                       sx={{
-                        width: "407px",
-                        height: "100%",
+                        width: "auto",
                       }}
                     >
-                      <img
+                      <Box
+                        component="img"
                         src={Frame4}
-                        style={{
-                          width: "100%",
-                          height: "100%",
-                        }}
                         alt=""
+                        sx={{ width: "100%", height: "100%" }}
                       />
                     </Box>
                   </Box>
@@ -336,36 +402,19 @@ function Home() {
             sx={{
               width: "100%",
               mt: 5,
+              display: "flex",
               justifyContent: "center",
             }}
           >
             <Box
               sx={{
-                width: "100%",
                 display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
-              <Typography variant="h4">OUR HAPPY CUSTOMERS</Typography>
-              <Box>
-                <Button>
-                  <ArrowBackIcon />
-                </Button>
-                <Button>
-                  <ArrowForwardIcon />
-                </Button>
-              </Box>
-            </Box>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "row",
-                gap: 4,
+                flexDirection: isMobile ? "column" : isTab ? "column" : "row",
+                gap: isMobile ? 1 : 4,
               }}
             >
               {Review.map((item) => (
-                <Grid
+                <Box
                   key={item.id}
                   container
                   sx={{
@@ -374,11 +423,11 @@ function Home() {
                 >
                   <Box
                     sx={{
-                      width: "400px",
+                      width: "auto",
                       height: "240px",
                       borderRadius: "20px",
                       border: "1px solid #ccc",
-                      p: 4,
+                      p: isMobile ? 1 : 4,
                       display: "flex",
                       flexDirection: "column",
                       justifyContent: "center",
@@ -405,13 +454,13 @@ function Home() {
                     </Box>
                     <Typography variant="body1">{item.review}</Typography>
                   </Box>
-                </Grid>
+                </Box>
               ))}
             </Box>
           </Box>
           <Footer />
         </Box>
-      </Grid>
+      </Container>
     </>
   );
 }

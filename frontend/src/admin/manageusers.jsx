@@ -2,7 +2,6 @@ import { useEffect, useState, useRef } from "react";
 import {
   Avatar,
   Container,
-  Grid,
   Box,
   Table,
   TableBody,
@@ -13,6 +12,8 @@ import {
   Button,
   IconButton,
   TextField,
+  Typography,
+  Chip,
 } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit";
 import BlockIcon from "@mui/icons-material/Block";
@@ -45,7 +46,7 @@ function ManageUsers() {
   });
 
   const [currentPage, setCurrentPage] = useState(1);
-  const itemPerPage = 1;
+  const itemPerPage = 3;
   const startIndex = (currentPage - 1) * itemPerPage;
   const endIndex = startIndex + itemPerPage;
   const currentItems = users.slice(startIndex, endIndex);
@@ -121,14 +122,18 @@ function ManageUsers() {
 
   return (
     <>
-      <Container maxWidth="xl">
-        <Grid container>
+      <Container maxWidth={false} disableGutters sx={{ p: 2 }}>
+        <Box
+          sx={{
+            width: "100%",
+          }}
+        >
           <Box
             sx={{
               width: "100%",
             }}
           >
-            <h1>Users </h1>
+            <Typography variant="h4">Users</Typography>
           </Box>
           <Box
             sx={{
@@ -136,11 +141,11 @@ function ManageUsers() {
               width: "100%",
             }}
           >
-            <TableContainer style={{ height: 250 }}>
+            <TableContainer style={{ height: 300 }}>
               <Table
                 stickyHeader
                 aria-label="sticky table"
-                sx={{ Width: "100%" }}
+                sx={{ width: "100%" }}
               >
                 <TableHead>
                   <TableRow>
@@ -149,6 +154,7 @@ function ManageUsers() {
                     <TableCell>Email</TableCell>
                     <TableCell>Address</TableCell>
                     <TableCell>Number</TableCell>
+                    <TableCell>Plan</TableCell>
                     <TableCell>Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -182,6 +188,16 @@ function ManageUsers() {
                           {user.address}
                         </TableCell>
                         <TableCell>{user.number}</TableCell>
+                        <TableCell>
+                          {user.isSubscribe === "basic" ? (
+                            <Chip label="Basic Plan" color="warning" />
+                          ) : user.isSubscribe === "premium" ? (
+                            <Chip label="Premium Plan" color="success" />
+                          ) : (
+                            <Chip label="Free Plan" color="info" />
+                          )}
+                        </TableCell>
+
                         <TableCell>
                           <Box
                             sx={{
@@ -346,7 +362,7 @@ function ManageUsers() {
               </Box>
             )}
           </Box>
-        </Grid>
+        </Box>
       </Container>
     </>
   );

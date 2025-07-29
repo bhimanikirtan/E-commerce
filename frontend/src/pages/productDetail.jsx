@@ -3,9 +3,9 @@ import ProductDetailPage from "../components/productDetail/productDetailPage";
 
 function ProductDetail() {
   return (
-    <div>
+    <>
       <ProductDetailPage />
-    </div>
+    </>
   );
 }
 

@@ -3,391 +3,328 @@ import {
   Grid,
   Typography,
   Button,
-  Stack,
-  Card,
   Divider,
   Slider,
   Chip,
-  Paper,
   ButtonBase,
   Skeleton,
+  Container,
 } from "@mui/material";
+import { useRef, useEffect, useState } from "react";
+import useIntersectionObserver from "../components/myHook/intersaction";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
-// import { useState } from "react";
 import { getAllproductsData } from "../Thunk/productThunk";
-import { useEffect, useState } from "react";
-// import { useTheme, useMediaQuery } from "@mui/material";
 import ProductCard from "../comon/productCard";
 import { useSelector, useDispatch } from "react-redux";
 import Header from "../components/header/header";
-import { useRef } from "react";
-import useIntersectionObserver from "../components/myHook/intersaction";
+import { fetchUser } from "../redux/authSlice";
+
 function CategoryPage() {
   const dispatch = useDispatch();
-  // const [minNum, setMinNum] = useState(0);
-  // const [maxNum, setMaxNum] = useState(1000);
+  const loaderRef = useRef(null);
   const minmin = 0;
   const maxmax = 1000;
-  const [priceRangeValue, setPriceRangeValue] = useState([100, 500]);
-  const handlePriceRangeChange = (event, newValue) => {
-    // setMinNum(newValue[0]);
-    // setMaxNum(newValue[1]);
-    setPriceRangeValue(newValue);
-  };
-  const loaderRef = useRef(null);
+  const { user } = useSelector((state) => state.auth);
   const { products, total } = useSelector((state) => state.products);
-  console.log(products);
-  // const theme = useTheme();
-  // const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [priceRangeValue, setPriceRangeValue] = useState([100, 500]);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
-  const limit = 6;
-  // const loading = true;
+  const limit = 9;
+  const [filters, setFilters] = useState({
+    color: [],
+    size: [],
+    price: [],
+    productType: [],
+  });
+  const handleColorChange = (color) => {
+    setFilters((prev) => ({
+      ...prev,
+      color: prev.color.includes(color)
+        ? prev.color.filter((c) => c !== color)
+        : [...prev.color, color],
+    }));
+  };
+
+  const handleSizeChange = (size) => {
+    setFilters((prev) => ({
+      ...prev,
+      size: prev.size.includes(size)
+        ? prev.size.filter((s) => s !== size)
+        : [...prev.size, size],
+    }));
+  };
+
+  const handlePriceRangeChange = (event, newValue) => {
+    setPriceRangeValue(newValue);
+    setFilters((prev) => ({ ...prev, price: newValue }));
+  };
+  const handleProductTypeChange = (type) => {
+    setFilters((prev) => ({
+      ...prev,
+      productType: prev.productType.includes(type)
+        ? prev.productType.filter((t) => t !== type)
+        : [...prev.productType, type],
+    }));
+  };
+
+  const handleResetFilters = () => {
+    window.scroll(0, 0);
+    setFilters({
+      color: [],
+      size: [],
+      price: [100, 500],
+      productType: [],
+    });
+    setPriceRangeValue([100, 500]);
+  };
+
   useEffect(() => {
-    dispatch(getAllproductsData({ skip: 0, limit }));
+    dispatch(fetchUser());
+    dispatch(getAllproductsData({ skip: 0, limit, filters }));
     setSkip(limit);
-  }, [dispatch]);
+  }, [dispatch, filters]);
+
+  useIntersectionObserver({
+    target: loaderRef,
+    onIntersect: () => {
+      if (!loading && products.length < total) {
+        loadMoreProducts();
+      }
+    },
+    enabled: true,
+  });
 
   const loadMoreProducts = () => {
     if (loading || products.length >= total) return;
     setLoading(true);
-    dispatch(getAllproductsData({ skip, limit })).finally(() => {
+    dispatch(getAllproductsData({ skip, limit, filters })).finally(() => {
       setSkip((prev) => prev + limit);
       setLoading(false);
     });
   };
-  useIntersectionObserver({
-    target: loaderRef,
-    onIntersect: loadMoreProducts,
-    enabled: !loading && products.length < total,
-  });
 
   return (
     <>
       <Header />
-      <Box
-        sx={{
-          // height:"100vh",
-          width: "100%",
-          display: "flex",
-          flexDirection: "row",
-        }}
-      >
+      <Container maxWidth={false} disableGutters>
         <Box
           sx={{
-            // backgroundColor:"black",
-            // position: "sticky",
-            // top: "100px",
-            // left:0,
-            width: "25%",
-            p: 2,
+            display: "flex",
+            flexDirection: { xs: "column", sm: "row" },
+            width: "100%",
+            justifyContent: "center",
           }}
         >
-          <Box
-            sx={{
-              position: "sticky",
-              top: 100,
-              left: 0,
-              width: "80%",
-              border: "1px solid black",
-            }}
-          >
+          {user?.isSubscribe !== "basic" && user?.isSubscribe !== "free" && (
             <Box
               sx={{
-                width: "90%",
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                p: 3,
+                width: { sm: "40%", md: "30%", lg: "25%", xl: "25%" },
+                height: "100%",
+                overflowY: "auto",
+                p: 2,
+                position: { xs: "unset", sm: "sticky" },
+                top: 80,
               }}
             >
-              <Typography variant="h5">Filters</Typography>
-              <Button size="small">
-                <FilterAltIcon />
-              </Button>
-            </Box>
-            <Divider sx={{ width: "100%" }} />
-            <Box sx={{ width: "100%" }}>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 1,
-                }}
-              >
-                <Typography>Tshirt</Typography>
-                <Button>h</Button>
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 1,
-                }}
-              >
-                <Typography>Tshirt</Typography>
-                <Button>h</Button>
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 1,
-                }}
-              >
-                <Typography>Tshirt</Typography>
-                <Button>h</Button>
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 1,
-                }}
-              >
-                <Typography>Tshirt</Typography>
-                <Button>h</Button>
-              </Box>
-              <Box
-                sx={{
-                  width: "100%",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  p: 1,
-                }}
-              >
-                <Typography>Tshirt</Typography>
-                <Button>h</Button>
-              </Box>
-            </Box>
-            <Divider sx={{ width: "100%" }} />
-            <Box sx={{ width: "100%" }}>
-              <Box
-                sx={{
-                  width: "90%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  p: 3,
-                }}
-              >
-                <Typography variant="h5">Price</Typography>
-                <Button>hello</Button>
-              </Box>
-              <Box>
-                <Slider
-                  getAriaLabel={() => "Price range"}
-                  value={priceRangeValue}
-                  onChange={handlePriceRangeChange}
-                  valueLabelDisplay="auto"
-                  // getAriaValueText={valuetext}
-                  min={minmin}
-                  max={maxmax}
-                />
-              </Box>
-            </Box>
-            <Divider sx={{ width: "100%" }} />
-            <Box sx={{ width: "100%" }}>
-              <Box
-                sx={{
-                  width: "90%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  p: 3,
-                }}
-              >
-                <Typography variant="h5">Colors</Typography>
-                <Button>hello</Button>
-              </Box>
-              <Box
-                sx={{
-                  width: "90%",
-                  display: "flex",
-                  flexWrap: "wrap",
-                  gap: 2,
-                  ml: 2,
-                }}
-              >
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "black",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "red",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "green",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "yellow",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "gray",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "pink",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "blue",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-                <ButtonBase
-                  sx={{
-                    width: 40,
-                    height: 40,
-                    borderRadius: "50%",
-                    backgroundColor: "orange",
-                    border: "2px solid white",
-                    boxShadow: "0 0 0 1px #ccc",
-                  }}
-                />
-              </Box>
-            </Box>
-            <Divider sx={{ width: "100%" }} />
-
-            <Box
-              sx={{
-                width: "100%",
-              }}
-            >
-              <Box
-                sx={{
-                  width: "90%",
-                  display: "flex",
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  p: 3,
-                }}
-              >
-                <Typography variant="h5">Sizes</Typography>
-                <Button>hello</Button>
-              </Box>
-              <Box>
-                <Chip
-                  sx={{
-                    p: 2,
-                  }}
-                  clickable
-                  label="big"
-                />
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-        <Box
-          sx={{
-            width: "75%",
-          }}
-        >
-          <Box
-            sx={{
-              p: 3,
-              display: "flex",
-              flexWrap: "wrap",
-              gap: 3,
-            }}
-          >
-            {products.map((product, index) => (
-              <Grid item xs={12} sm={6} md={4} key={index}>
-                <ProductCard product={product} />
-              </Grid>
-            ))}
-          </Box>
-          <Box
-            ref={loaderRef}
-            id="loader"
-            sx={{
-              width: "100%",
-              display: "flex",
-              flexWrap: "wrap",
-            }}
-          >
-            {loading &&
-              Array.from({ length: 6 }).map((_, index) => (
+              <Box sx={{ borderRadius: 2, boxShadow: 2, p: 2 }}>
                 <Box
-                  key={index}
                   sx={{
-                    width: 295,
-                    height: 508,
-                    borderRadius: 2,
                     display: "flex",
-                    flexDirection: "column",
-                    gap: 1,
-                    p: 2,
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    mb: 2,
                   }}
                 >
-                  <Skeleton
-                    variant="rectangular"
-                    height={298}
-                    sx={{ borderRadius: 2 }}
-                  />
-                  <Skeleton variant="text" height={40} width="80%" />
-                  <Skeleton variant="text" height={30} width="60%" />
-                  <Skeleton variant="text" height={30} width="40%" />
-                  <Skeleton
-                    variant="rectangular"
-                    height={50}
-                    width="100%"
-                    sx={{ borderRadius: 2 }}
-                  />
+                  <Typography variant="h6">Filters</Typography>
+                  <Button
+                    size="small"
+                    color="primary"
+                    onClick={handleResetFilters}
+                  >
+                    <FilterAltIcon sx={{ mr: 0.5 }} />
+                    Reset
+                  </Button>
                 </Box>
-              ))}
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                    Product Type
+                  </Typography>
+
+                  {["newArrival", "topSelling"].map((type, i) => (
+                    <Box
+                      key={i}
+                      sx={{ display: "flex", alignItems: "center", mb: 1 }}
+                    >
+                      <input
+                        type="checkbox"
+                        checked={filters.productType?.includes(type)}
+                        onChange={() => handleProductTypeChange(type)}
+                        style={{
+                          width: "24px",
+                          height: "24px",
+                          cursor: "pointer",
+                        }}
+                      />
+                      <Typography
+                        sx={{ ml: 1, fontSize: "1.1rem", fontWeight: 500 }}
+                      >
+                        {type === "newArrival" ? "New Arrival" : "Top Selling"}
+                      </Typography>
+                    </Box>
+                  ))}
+                </Box>
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                    Colors
+                  </Typography>
+                  <Box sx={{ display: "flex", flexWrap: "wrap", gap: 1 }}>
+                    {["black", "red", "green", "grey", "blue"].map(
+                      (color, i) => {
+                        const isSelected = filters.color.includes(color);
+                        return (
+                          <ButtonBase
+                            key={i}
+                            sx={{
+                              width: 36,
+                              height: 36,
+                              borderRadius: "50%",
+                              backgroundColor: color,
+                              border: isSelected
+                                ? "2px solid #000000"
+                                : "2px solid white",
+                              boxShadow: isSelected
+                                ? "0 0 0 1px #000000"
+                                : "0 0 0 1px #ccc",
+                            }}
+                            onClick={() => handleColorChange(color)}
+                          />
+                        );
+                      }
+                    )}
+                  </Box>
+                </Box>
+                <Divider sx={{ my: 2 }} />
+                <Box sx={{ mb: 2 }}>
+                  <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                    Sizes
+                  </Typography>
+                  <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+                    {["Small", "Medium", "Large", "X-Large"].map((size, i) => (
+                      <Chip
+                        key={i}
+                        label={size}
+                        onClick={() => handleSizeChange(size)}
+                        variant={
+                          filters.size.includes(size) ? "filled" : "outlined"
+                        }
+                        color={
+                          filters.size.includes(size) ? "primary" : "default"
+                        }
+                        sx={{ px: 2, py: 1, fontWeight: 500 }}
+                      />
+                    ))}
+                  </Box>
+                  <Divider sx={{ my: 2 }} />
+                  <Box sx={{ mb: 2 }}>
+                    <Typography variant="subtitle1" sx={{ mb: 1 }}>
+                      Price
+                    </Typography>
+                    <Slider
+                      getAriaLabel={() => "Price range"}
+                      value={priceRangeValue}
+                      onChange={handlePriceRangeChange}
+                      valueLabelDisplay="auto"
+                      min={minmin}
+                      max={maxmax}
+                      sx={{ mx: 1 }}
+                    />
+                  </Box>
+                </Box>
+              </Box>
+            </Box>
+          )}
+
+          <Box sx={{ flex: 1, overflowY: "auto" }}>
+            {products ? (
+              <Box
+                sx={{
+                  p: 3,
+                  display: "flex",
+                  flexWrap: "wrap",
+                  ml: { xs: 0, sm: 0, md: 0, lg: 5 },
+                  justifyContent: {
+                    xs: "center",
+                    md: "center",
+                    xl: "flex-start",
+                  },
+                  gap: 3,
+                }}
+              >
+                {products.map((product) => (
+                  <Grid key={product._id || product.id}>
+                    <ProductCard product={product} />
+                  </Grid>
+                ))}
+              </Box>
+            ) : (
+              <Box
+                sx={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                }}
+              >
+                <Typography variant="h3">Products Not Found</Typography>
+              </Box>
+            )}
+
+            <Box
+              id="loader"
+              ref={loaderRef}
+              sx={{
+                width: "100%",
+                height: 40,
+                marginTop: 4,
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              {loading &&
+                Array.from({ length: 3 }).map((_, index) => (
+                  <Box
+                    key={index}
+                    sx={{
+                      width: 295,
+                      height: 508,
+                      borderRadius: 2,
+                      display: "flex",
+                      flexDirection: "column",
+                      gap: 1,
+                      p: 2,
+                    }}
+                  >
+                    <Skeleton
+                      variant="rectangular"
+                      height={298}
+                      sx={{ borderRadius: 2 }}
+                    />
+                    <Skeleton variant="text" height={40} width="80%" />
+                    <Skeleton variant="text" height={30} width="60%" />
+                    <Skeleton variant="text" height={30} width="40%" />
+                    <Skeleton
+                      variant="rectangular"
+                      height={50}
+                      width="100%"
+                      sx={{ borderRadius: 2 }}
+                    />
+                  </Box>
+                ))}
+            </Box>
           </Box>
         </Box>
-      </Box>
+      </Container>
     </>
   );
 }
