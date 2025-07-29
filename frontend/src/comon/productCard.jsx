@@ -12,7 +12,6 @@ import { getOneproductData } from "../Thunk/productThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { openSnackbar } from "../redux/snackBarSlice";
-import { addToCartData } from "../Thunk/cartThunk";
 import {
   addWishlistData,
   deleteUserWishlistData,
@@ -146,21 +145,15 @@ const ProductCard = ({ product }) => {
               p: 1.5,
             }}
             variant="contained"
-            className="black" 
+            className="black"
             onClick={(e) => {
               e.stopPropagation();
-              dispatch(
-                addToCartData({
-                  productId: product._id,
-                  quantity: 1,
-                  size: "small",
-                  color: "red",
-                })
-              );
+              handleSelect(product._id);
+
               dispatch(
                 openSnackbar({
-                  massage: `${product.name} added to cart`,
-                  severity: "success",
+                  massage: `Please select color and size`,
+                  severity: "error",
                 })
               );
             }}

@@ -178,8 +178,7 @@ const minusProduct = async (req, res) => {
       return res.status(404).json({ status: 404, msg: "Cart not Found" });
     }
     const product = cart.products.findIndex((prod) => prod.id === productId);
-
-    if (product !== 1 && cart.products[product].quantity > 1) {
+    if (cart.products[product].quantity > 1) {
       cart.products[product].quantity -= 1;
       const price = cart.products[product].productId.price;
       cart.total -= price;
