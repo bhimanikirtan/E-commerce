@@ -371,9 +371,8 @@ const userSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateAddress.fulfilled, (state, action) => {
+      .addCase(updateAddress.fulfilled, (state) => {
         state.loading = false;
-        state.address = action.payload.addressData;
       })
       .addCase(updateAddress.rejected, (state, action) => {
         state.error = action.error.message;
