@@ -26,10 +26,11 @@ const createProduct = async (req, res) => {
       productType,
     });
     await newProduct.save();
+    const AllProduct = await Product.find({});
     return res.status(201).json({
       status: 201,
       msg: "product add successfully",
-      product: newProduct,
+      AllProduct,
     });
   } catch (error) {
     console.error("add Product Error:", error);
@@ -169,8 +170,10 @@ const getOneproduct = async (req, res) => {
 };
 const deleteProduct = async (req, res) => {
   try {
-    await Product.findByIdAndDelete(req.params.id);
-    return res.status(200).json({ status: 200, msg: "delete successfully" });
+    const deleteProduct = await Product.findByIdAndDelete(req.params.id); 
+    return res
+      .status(200)
+      .json({ status: 200, msg: "delete successfully", deleteProduct });
   } catch (error) {
     return res.status(500).json({ status: 500, msg: "delete error" });
   }
@@ -191,18 +194,18 @@ const editProduct = async (req, res) => {
       updateData.image = req.file.path;
     }
 
-    const product = await Product.findByIdAndUpdate(req.params.id, updateData, {
+    const updateProduct = await Product.findByIdAndUpdate(req.params.id, updateData, {
       new: true,
     });
 
-    if (!product) {
+    if (!updateProduct) {
       return res.status(400).json({ status: 400, msg: "Product not found" });
     }
 
     return res.status(200).json({
       status: 200,
       msg: "Product updated successfully",
-      product,
+      updateProduct,
     });
   } catch (error) {
     return res.status(500).json({ msg: "Update failed" });

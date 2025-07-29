@@ -13,7 +13,7 @@ export const emailLetter = ({ subject, message, title }) => {
       </div>
 
       <div style="background-color: #f4f4f4; padding: 10px; text-align: center; font-size: 12px; color: #777;">
-        © ${new Date().getFullYear()} SHOP.IN. All rights reserved.
+        © ${new Date().getFullYear()} SHOP.CO. All rights reserved.
       </div>
     </div>
   </div>

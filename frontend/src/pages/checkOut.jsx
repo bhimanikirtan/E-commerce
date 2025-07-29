@@ -11,21 +11,30 @@ import {
   useTheme,
   useMediaQuery,
   Container,
+  IconButton,
+  Grid,
+  Card,
 } from "@mui/material";
 import { useState, useEffect } from "react";
 import Header from "../components/header/header";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllCartData } from "../Thunk/cartThunk";
-import { fetchUser, getAddress } from "../redux/authSlice";
+import { deleteAddress, fetchUser, getAddress } from "../redux/authSlice";
 import { sendPaymentData } from "../Thunk/paymentThunk";
 import { openSnackbar } from "../redux/snackBarSlice";
 import { addOrderData } from "../Thunk/orderThunk";
+import AddAddress from "../components/addAddress/addAddress";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
 
 function CheckOut() {
   const dispatch = useDispatch();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
-
+  const [open, setOpen] = useState(false);
+  const [editAddMode, setEditAddMode] = useState(false);
+  const [editAddId, setEditAddId] = useState(null);
+  const [editAddData, setEditAddData] = useState("");
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [selectedPayment, setSelectedPayment] = useState(null);
   const [checked, setChecked] = useState(false);
@@ -72,6 +81,19 @@ function CheckOut() {
       setLoading(false);
     }
   };
+  const handleEditAddress = (add) => {
+    setOpen(true);
+    setEditAddMode(true);
+    setEditAddId(add._id);
+    setEditAddData(add);
+  };
+  const handleDeleteAddress = async (id) => {
+    try {
+      await dispatch(deleteAddress(id)).unwrap();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
     dispatch(getAllCartData());
@@ -88,6 +110,16 @@ function CheckOut() {
 
   return (
     <>
+      <AddAddress
+        open={open}
+        editAddMode={editAddMode}
+        editData={editAddData}
+        editId={editAddId}
+        onClose={() => {
+          setOpen(false);
+          setEditAddMode(false);
+        }}
+      />
       <Header />
       {loading ? (
         <Box
@@ -164,16 +196,60 @@ function CheckOut() {
                           value={selectedAddress?._id || ""}
                           onChange={handleChange}
                         >
-                          {address?.map((add) => (
-                            <FormControlLabel
-                              key={add._id}
-                              value={add._id}
-                              control={<Radio />}
-                              label={`${add.address}, ${add.city}, ${add.pincode}, ${add.state}, ${add.country}`}
-                            />
-                          ))}
+                          <Grid container spacing={2}>
+                            {address?.map((add) => (
+                              <Grid item xs={12} md={6} key={add._id}>
+                                <Card variant="outlined" sx={{ p: 2 }}>
+                                  <Box
+                                    display="flex"
+                                    alignItems="center"
+                                    justifyContent="space-between"
+                                  >
+                                    <FormControlLabel
+                                      value={add._id}
+                                      control={<Radio />}
+                                      label={
+                                        <Typography variant="body1">
+                                          {`${add.address}, ${add.city}, ${add.pincode}, ${add.state}, ${add.country}`}
+                                        </Typography>
+                                      }
+                                    />
+
+                                    <Box>
+                                      <IconButton
+                                        onClick={() => handleEditAddress(add)}
+                                        aria-label="edit"
+                                      >
+                                        <EditIcon color="info" />
+                                      </IconButton>
+                                      <IconButton
+                                        onClick={() =>
+                                          handleDeleteAddress(add._id)
+                                        }
+                                        aria-label="delete"
+                                      >
+                                        <DeleteIcon color="error" />
+                                      </IconButton>
+                                    </Box>
+                                  </Box>
+                                </Card>
+                              </Grid>
+                            ))}
+                          </Grid>
                         </RadioGroup>
                       </FormControl>
+                      <Box sx={{ mt: 2 }}>
+                        {user?.isSubscribe === "basic" ||
+                        (user?.isSubscribe === "free" &&
+                          address?.length >= 1) ? null : (
+                          <Button
+                            variant="contained"
+                            onClick={() => setOpen(true)}
+                          >
+                            + Add New Address
+                          </Button>
+                        )}
+                      </Box>
                     </Box>
                   )}
                 </>

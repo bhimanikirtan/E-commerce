@@ -5,6 +5,7 @@ import {
   getOneproductData,
   getNewArrivalsProductData,
   getTopSellingProductData,
+  addProductData,
 } from "../Thunk/productThunk";
 import { createSlice } from "@reduxjs/toolkit";
 
@@ -23,6 +24,20 @@ const productSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
+
+      /*******************************addProductData*****************************/
+      .addCase(addProductData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(addProductData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload.AllProduct;
+      })
+      .addCase(addProductData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error fetching Products";
+      })
       /*******************************getAllProductData*****************************/
       .addCase(getAllproductsData.pending, (state) => {
         state.loading = true;
@@ -77,8 +92,15 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(updateProductData.fulfilled, (state) => {
+      .addCase(updateProductData.fulfilled, (state, action) => {
         state.loading = false;
+        const updateProduct = action.payload.updateProduct;
+        const index = state.products.findIndex(
+          (p) => p._id === action.payload.updateProduct._id
+        );
+        if (index !== -1) {
+          state.products[index] = updateProduct;
+        }
       })
       .addCase(updateProductData.rejected, (state, action) => {
         state.loading = false;
@@ -91,8 +113,12 @@ const productSlice = createSlice({
         state.loading = true;
         state.error = null;
       })
-      .addCase(deleteProductData.fulfilled, (state) => {
+      .addCase(deleteProductData.fulfilled, (state, action) => {
         state.loading = false;
+        console.log(action.payload);
+        state.products = state.products.filter(
+          (d) => d._id !== action.payload.deleteProduct._id
+        );
       })
       .addCase(deleteProductData.rejected, (state, action) => {
         state.loading = false;
@@ -115,5 +141,5 @@ const productSlice = createSlice({
       });
   },
 });
-export const { ratingUpdate } = productSlice.actions;
+
 export default productSlice.reducer;

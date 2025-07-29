@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import {
   Box,
   Container,
-  Grid,
   Table,
   TableBody,
   TableCell,
@@ -44,7 +43,6 @@ import {
 } from "../Thunk/productThunk";
 import { useSelector, useDispatch } from "react-redux";
 import { OutlinedInput } from "@mui/material";
-import LoadingPage from "../comon/loadingPage";
 import { useRef } from "react";
 const names = ["Small", "Medium", "Large", "X-Large"];
 const colors = [
@@ -82,7 +80,6 @@ function ManageProducts() {
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
   const limit = 9;
-
   useEffect(() => {
     dispatch(getAllproductsData({ skip: 0, limit }));
     setSkip(limit);
@@ -182,8 +179,6 @@ function ManageProducts() {
           await dispatch(addProductData(formData)).unwrap();
           handaleClose();
         }
-
-        dispatch(getAllproductsData());
       } catch (error) {
         console.error(error);
       }
@@ -193,7 +188,6 @@ function ManageProducts() {
   const handleDelete = async (id) => {
     try {
       await dispatch(deleteProductData(id)).unwrap();
-      dispatch(getAllproductsData());
     } catch (error) {
       console.log(error);
     }
@@ -504,12 +498,12 @@ function ManageProducts() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {products.length === 0 ? (
+                  {products?.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={10}>No Product Data Found</TableCell>
                     </TableRow>
                   ) : (
-                    products.map((prod) => (
+                    products?.map((prod) => (
                       <TableRow key={prod._id}>
                         <TableCell>{prod.name}</TableCell>
                         <TableCell>

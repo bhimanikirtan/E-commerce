@@ -51,111 +51,122 @@ const ProductCard = ({ product }) => {
     dispatch(fetchUser());
   }, [dispatch]);
   return (
-    <Box key={product._id}>
+    <Box
+      key={product._id}
+      sx={{
+        maxWidth: 295,
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        height: "450px",
+        transition: "all 0.3s ease-in-out",
+        "&:hover .addToCartBtn": {
+          opacity: 1,
+          transform: "translateY(0)",
+        },
+      }}
+    >
       <Box
-        sx={{
-          maxWidth: "295px",
-          maxHeight: "508px",
+        sx={{ cursor: "pointer", maxWidth: "295px", position: "relative" }}
+        onClick={() => {
+          handleSelect(product._id);
         }}
       >
-        <Box
-          sx={{ cursor: "pointer", maxWidth: "295px", position: "relative" }}
-          onClick={() => {
-            handleSelect(product._id);
-          }}
-        >
-          <img
-            style={{ width: "100%" }}
-            src={`http://192.168.2.222:5000/${product.image}`}
-            alt=""
-          />
-          {user?.isSubscribe !== "free" && (
-            <Tooltip
-              title={like ? "Remove Like" : "Like"}
-              placement="top"
-              arrow
-            >
-              <IconButton
-                sx={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px",
-                }}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleChange(product._id);
-                }}
-              >
-                {like ? (
-                  <FavoriteIcon color="error" />
-                ) : (
-                  <FavoriteBorderIcon sx={{ color: "#000000" }} />
-                )}
-              </IconButton>
-            </Tooltip>
-          )}
-        </Box>
-        <Box>
-          <Typography variant="h6">{product.name}</Typography>
-          <Typography variant="h5" sx={{ color: "orange" }}>
-            <Box
+        <img
+          style={{ width: "100%" }}
+          src={`http://192.168.2.222:5000/${product.image}`}
+          alt=""
+        />
+        {user?.isSubscribe !== "free" && (
+          <Tooltip title={like ? "Remove Like" : "Like"} placement="top" arrow>
+            <IconButton
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
+                position: "absolute",
+                top: "15px",
+                right: "15px",
+              }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleChange(product._id);
               }}
             >
-              {product.rating == null ? (
-                <Typography variant="h6">No Rating</Typography>
+              {like ? (
+                <FavoriteIcon color="error" />
               ) : (
-                <>
-                  <Rating
-                    name="read-only"
-                    value={Number(product.rating?.toFixed(1))}
-                    precision={0.5}
-                    readOnly
-                  />
-                  <Typography variant="h6">
-                    {product.rating?.toFixed(1)}/5
-                  </Typography>
-                </>
+                <FavoriteBorderIcon sx={{ color: "#000000" }} />
               )}
-            </Box>
-          </Typography>
-          <Typography variant="h5">${product.price}</Typography>
+            </IconButton>
+          </Tooltip>
+        )}
+      </Box>
+      <Box>
+        <Typography variant="h6">{product.name}</Typography>
+        <Typography variant="h5" sx={{ color: "orange" }}>
           <Box
             sx={{
-              width: "100%",
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
             }}
           >
-            <Button
-              sx={{
-                width: "100%",
-                borderRadius: 10,
-                p: 1.5,
-              }}
-              variant="contained"
-              className="black"
-              onClick={() => {
-                dispatch(
-                  addToCartData({
-                    productId: product._id,
-                    quantity: 1,
-                    size: "small",
-                    color: "red",
-                  })
-                );
-                dispatch(
-                  openSnackbar({
-                    massage: `${product.name} add in Cart`,
-                    severity: "success",
-                  })
-                );
-              }}
-            >
-              Add to Cart
-            </Button>
+            {product.rating == null ? (
+              <Typography variant="h6">No Rating</Typography>
+            ) : (
+              <>
+                <Rating
+                  name="read-only"
+                  value={Number(product.rating?.toFixed(1))}
+                  precision={0.5}
+                  readOnly
+                />
+                <Typography variant="h6">
+                  {product.rating?.toFixed(1)}/5
+                </Typography>
+              </>
+            )}
           </Box>
+        </Typography>
+        <Typography variant="h5">${product.price}</Typography>
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            width: "100%",
+            opacity: 0,
+            transform: "translateY(20px)",
+            transition: "all 0.3s ease-in-out",
+          }}
+          className="addToCartBtn"
+        >
+          <Button
+            sx={{
+              width: "100%",
+              borderRadius: 3,
+              p: 1.5,
+            }}
+            variant="contained"
+            className="black" 
+            onClick={(e) => {
+              e.stopPropagation();
+              dispatch(
+                addToCartData({
+                  productId: product._id,
+                  quantity: 1,
+                  size: "small",
+                  color: "red",
+                })
+              );
+              dispatch(
+                openSnackbar({
+                  massage: `${product.name} added to cart`,
+                  severity: "success",
+                })
+              );
+            }}
+          >
+            Add to Cart
+          </Button>
         </Box>
       </Box>
     </Box>
