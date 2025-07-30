@@ -18,10 +18,12 @@ import {
 } from "../Thunk/wishlistThunk";
 import { useEffect, useState } from "react";
 import { fetchUser } from "../redux/authSlice";
+import { useTranslation } from "react-i18next";
 
 const ProductCard = ({ product }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [like, setLike] = useState(product.isLiked);
   const { user } = useSelector((state) => state.auth);
   const handleSelect = async (id) => {
@@ -125,7 +127,10 @@ const ProductCard = ({ product }) => {
             )}
           </Box>
         </Typography>
-        <Typography variant="h5">${product.price}</Typography>
+        <Typography variant="h5">
+          {t("$")}
+          {product.price}
+        </Typography>
         <Box
           sx={{
             position: "absolute",

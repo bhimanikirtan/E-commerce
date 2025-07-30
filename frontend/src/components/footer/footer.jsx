@@ -19,10 +19,12 @@ import { addNewSletterData } from "../../Thunk/newSletterThunk";
 import { useDispatch, useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { fetchUser } from "../../redux/authSlice";
+import { useTranslation } from "react-i18next";
 
 function Footer() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation();
   const [email, setEmail] = useState("");
   const { user } = useSelector((state) => state.auth);
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -82,9 +84,9 @@ function Footer() {
             <Box>
               <Typography variant="body1">
                 {" "}
-                We have clothes that suits your style <br />
-                and which you’re proud to wear. <br />
-                From women to men.
+                {t("We have clothes that suits your style")} <br />
+                {t("and which you’re proud to wear.")} <br />
+                {t("From women to men.")}
               </Typography>
             </Box>
             <Box
@@ -143,20 +145,20 @@ function Footer() {
           >
             <Box>
               <Typography variant="h5" fontWeight="bold">
-                COMPANY
+                {t("COMPANY")}
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body1">About</Typography>
+              <Typography variant="body1">{t("About")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Features</Typography>
+              <Typography variant="body1">{t("Features")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Works </Typography>
+              <Typography variant="body1">{t("Works")} </Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Career </Typography>
+              <Typography variant="body1">{t("Career")} </Typography>
             </Box>
           </Box>
           <Box
@@ -170,20 +172,23 @@ function Footer() {
           >
             <Box>
               <Typography variant="h5" fontWeight="bold">
-                HELP
+                {t("HELP")}
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Customer Support</Typography>
+              <Typography variant="body1">{t("Customer Support")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Delivery Details</Typography>
+              <Typography variant="body1">{t("Delivery Details")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Terms & Conditions</Typography>
+              <Typography variant="body1">
+                {" "}
+                {t("Terms & Conditions")}
+              </Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Privacy Policy</Typography>
+              <Typography variant="body1">{t("Privacy Policy")}</Typography>
             </Box>
           </Box>
           <Box
@@ -197,20 +202,20 @@ function Footer() {
           >
             <Box>
               <Typography variant="h5" fontWeight="bold">
-                FAQ
+                {t("FAQ")}
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Account</Typography>
+              <Typography variant="body1"> {t("Account")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Manage Deliveries</Typography>
+              <Typography variant="body1">{t("Manage Deliveries")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Orders</Typography>
+              <Typography variant="body1">{t("Orders")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Payments</Typography>
+              <Typography variant="body1">{t("Payments")}</Typography>
             </Box>
           </Box>
           <Box
@@ -224,20 +229,22 @@ function Footer() {
           >
             <Box>
               <Typography variant="h5" fontWeight="bold">
-                RESOURCES
+                {t("RESOURCES")}
               </Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> Free eBooks</Typography>
+              <Typography variant="body1"> {t("Free eBooks")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Development Tutorial</Typography>
+              <Typography variant="body1">
+                {t("Development Tutorial")}
+              </Typography>
             </Box>
             <Box>
-              <Typography variant="body1"> How to - Blog</Typography>
+              <Typography variant="body1">{t("How to - Blog")}</Typography>
             </Box>
             <Box>
-              <Typography variant="body1">Youtube Playlist</Typography>
+              <Typography variant="body1">{t("Youtube Playlist")}</Typography>
             </Box>
           </Box>
         </Box>
@@ -252,7 +259,7 @@ function Footer() {
           }}
         >
           <Typography variant="body1">
-            Shop.co © 2000-2023, All Rights Reserved
+            {t("Shop.co © 2000-2023, All Rights Reserved")}
           </Typography>
           <Box>
             <img src={paymenttype1} alt="" />
@@ -303,7 +310,7 @@ function Footer() {
                     color: "#fff",
                   }}
                 >
-                  STAY UPTO DATE ABOUT OUR LATEST OFFERS
+                  {t("STAY UPTO DATE ABOUT OUR LATEST OFFERS")}
                 </Typography>
               </Box>
 
@@ -331,7 +338,7 @@ function Footer() {
                     border: "none",
                     outline: "none",
                   }}
-                  placeholder="Enter your email"
+                  placeholder={t("Enter your email")}
                   required
                 />
                 <Button
@@ -344,7 +351,7 @@ function Footer() {
                   }}
                   onClick={handleSubscribe}
                 >
-                  Subscribe to Newsletter
+                  {t("Subscribe to Newsletter")}
                 </Button>
               </Box>
             </Box>

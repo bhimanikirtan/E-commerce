@@ -12,9 +12,11 @@ import { useEffect } from "react";
 import ProductCard from "../comon/productCard";
 import { useSelector, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 function NewArrivalProduct() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { products } = useSelector((state) => state.products);
@@ -45,7 +47,7 @@ function NewArrivalProduct() {
           }}
         >
           <Typography variant={isMobile ? "h4" : "h2"} component="h2">
-            NEW ARRIVALS
+            {t("NEW ARRIVALS")}
           </Typography>
         </Box>
         <Box

@@ -25,9 +25,11 @@ import { openSnackbar } from "../../redux/snackBarSlice";
 import { getOneProductRatingData } from "../../Thunk/ratingThunk";
 import RatingCard from "../../comon/ratingCard";
 import ProductCard from "../../comon/productCard";
+import { useTranslation } from "react-i18next";
 
 function ProductDetailPage() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const [selectedColor, setSelectedColor] = useState("");
   const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("");
@@ -372,13 +374,14 @@ function ProductDetailPage() {
             >
               <Box
                 sx={{
+                  p: 2,
                   width: "auto",
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "flex-start",
                 }}
               >
-                <Typography variant="h5">All Reviews</Typography>
+                <Typography variant="h5">{t("All Reviews")}</Typography>
                 <Typography variant="h5">
                   ({OneProductRatingData.length})
                 </Typography>
@@ -421,7 +424,7 @@ function ProductDetailPage() {
               }}
             >
               <Typography variant="h4" component="h2">
-                You might also like
+                {t("You might also like")}
               </Typography>
             </Box>
             <Box

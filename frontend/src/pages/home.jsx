@@ -21,9 +21,11 @@ import Frame3 from "../assets/Frame 3.png";
 import Frame4 from "../assets/Frame 4.png";
 import GreenTik from "../assets/greentik.png";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function Home() {
   const theme = useTheme();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm", "ssm", "xs"));
   const isTab = useMediaQuery(theme.breakpoints.down("md"));
@@ -104,14 +106,14 @@ function Home() {
                   }}
                   variant={isMobile ? "h4" : "h3"}
                 >
-                  FIND CLOTHES THAT MATCHES YOUR STYLE
+                  {t("FIND CLOTHES THAT MATCHES YOUR STYLE")}
                 </Typography>
               </Box>
               <Box>
                 <Typography variant={isMobile ? "body2" : "body1"}>
-                  Browse through our diverse range of meticulously crafted
-                  garments, designed to bring out your individuality and cater
-                  to your sense of style.
+                  {t(
+                    "Browse through our diverse range of meticulously crafted garments, designed to bring out your individuality and cater to your sense of style"
+                  )}
                 </Typography>
               </Box>
               <Box
@@ -131,7 +133,7 @@ function Home() {
                     p: isMobile ? 1 : 1.5,
                   }}
                 >
-                  shop now
+                  {t("shop now")}
                 </Button>
               </Box>
 
@@ -147,7 +149,9 @@ function Home() {
               >
                 <Box className="Box">
                   <Typography variant="h4">200 +</Typography>
-                  <Typography variant="body2">International Brands</Typography>
+                  <Typography variant="body2">
+                    {t("internationalBrands")}
+                  </Typography>
                 </Box>
                 <Divider
                   orientation="vertical"
@@ -157,7 +161,9 @@ function Home() {
 
                 <Box className="Box">
                   <Typography variant="h4">2,000 +</Typography>
-                  <Typography variant="body2">High-Quality Products</Typography>
+                  <Typography variant="body2">
+                    {t("highQualityProducts")}
+                  </Typography>
                 </Box>
                 <Divider
                   orientation="vertical"
@@ -167,7 +173,7 @@ function Home() {
 
                 <Box className="Box">
                   <Typography variant="h4">30,000 +</Typography>
-                  <Typography variant="body2">Happy Customers</Typography>
+                  <Typography variant="body2">{t("happyCustomers")}</Typography>
                 </Box>
               </Box>
             </Box>
@@ -271,7 +277,7 @@ function Home() {
                   variant={isMobile ? "h6" : "h3"}
                   sx={{ color: "#fff", textAlign: "center" }}
                 >
-                  {brand}
+                  {t(brand)}
                 </Typography>
               </Box>
             ))}
@@ -305,7 +311,7 @@ function Home() {
                   }}
                 >
                   <Typography variant={isMobile ? "h5" : "h3"}>
-                    BROWSE BY DRESS STYLE
+                    {t("BROWSE BY DRESS STYLE")}
                   </Typography>
                 </Box>
                 <Box

@@ -14,6 +14,8 @@ import {
   Drawer,
   useMediaQuery,
   Tooltip,
+  TextField,
+  MenuItem,
 } from "@mui/material";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
@@ -24,9 +26,11 @@ import { useLocation, useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
 import { openSnackbar } from "../../redux/snackBarSlice";
 import { getAllCartData } from "../../Thunk/cartThunk";
+import { useTranslation } from "react-i18next";
 
 export default function Header() {
   const theme = useTheme();
+  const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("md"));
   const { cartData } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
@@ -43,6 +47,9 @@ export default function Header() {
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
+  };
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
   };
 
   const DesktopMenu = () => (
@@ -66,6 +73,80 @@ export default function Header() {
               gap: 2,
             }}
           >
+            <TextField
+              select
+              sx={{ minWidth: 120 }}
+              value={i18n.language == "en-GB" ? "en" : i18n.language}
+              onChange={(e) => changeLanguage(e.target.value)}
+              variant="standard"
+              size="small"
+            >
+              <MenuItem value="en">
+                <img
+                  src="https://hatscripts.github.io/circle-flags/flags/us.svg"
+                  alt="English"
+                  style={{
+                    width: 20,
+                    height: 14,
+                    marginRight: 8,
+                    borderRadius: 2,
+                  }}
+                />
+                English
+              </MenuItem>
+              <MenuItem value="hi">
+                <img
+                  src="https://hatscripts.github.io/circle-flags/flags/in.svg"
+                  alt="Hindi"
+                  style={{
+                    width: 20,
+                    height: 14,
+                    marginRight: 8,
+                    borderRadius: 2,
+                  }}
+                />
+                हिंदी
+              </MenuItem>
+              <MenuItem value="gu">
+                <img
+                  src="https://hatscripts.github.io/circle-flags/flags/in.svg"
+                  alt="Gujarati"
+                  style={{
+                    width: 20,
+                    height: 14,
+                    marginRight: 8,
+                    borderRadius: 2,
+                  }}
+                />
+                ગુજરાતી
+              </MenuItem>
+              <MenuItem value="de">
+                <img
+                  src="https://hatscripts.github.io/circle-flags/flags/de.svg"
+                  alt="Germany"
+                  style={{
+                    width: 20,
+                    height: 14,
+                    marginRight: 8,
+                    borderRadius: 2,
+                  }}
+                />
+                Germany
+              </MenuItem>
+              <MenuItem value="zh">
+                <img
+                  src="https://hatscripts.github.io/circle-flags/flags/cn.svg"
+                  alt="China"
+                  style={{
+                    width: 20,
+                    height: 14,
+                    marginRight: 8,
+                    borderRadius: 2,
+                  }}
+                />
+                China
+              </MenuItem>
+            </TextField>
             <Box
               sx={{
                 display: "flex",
@@ -79,7 +160,7 @@ export default function Header() {
             >
               <SearchIcon sx={{ color: "#888", mr: 1 }} />
               <InputBase
-                placeholder="Search for products..."
+                placeholder={t("Search for products...")}
                 fullWidth
                 sx={{
                   color: "#333",
@@ -126,7 +207,7 @@ export default function Header() {
                         navigate("/login");
                       }}
                     >
-                      Logout
+                      {t("logout")}
                     </Button>
                   </>,
                 ]
@@ -149,7 +230,7 @@ export default function Header() {
                           navigate("/register");
                         }}
                       >
-                        Register
+                        {t("Register")}
                       </Button>
                       <Button
                         variant="outlined"
@@ -163,7 +244,7 @@ export default function Header() {
                         }}
                       >
                         {" "}
-                        Login
+                        {t("Login")}
                       </Button>
                     </Grid>
                   </>,
@@ -233,7 +314,7 @@ export default function Header() {
                           navigate("/login");
                         }}
                       >
-                        Logout
+                        {t("logout")}
                       </Button>
                     </>,
                   ]
@@ -442,7 +523,7 @@ export default function Header() {
                         navigate("/categoryPage");
                       }}
                     >
-                      Shop
+                      {t("shop")}
                     </Button>
                   </Grid>
                 </Grid>

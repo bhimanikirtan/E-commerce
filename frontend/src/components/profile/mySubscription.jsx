@@ -3,9 +3,11 @@ import { useEffect } from "react";
 import { fetchUser } from "../../redux/authSlice";
 import { Box, Button, Typography } from "@mui/material";
 import { handleSubscriptionData } from "../../Thunk/paymentThunk";
+import { useTranslation } from "react-i18next";
 
 function MySubscription() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
   const subscribId = user?.subscriptionId;
   const userId = user?._id;
@@ -33,7 +35,7 @@ function MySubscription() {
         {user?.isSubscribe === "basic" || user?.isSubscribe === "premium" ? (
           <>
             <Typography variant="h3" align="center">
-              Already Subscribed
+              {t("Already Subscribed")}
             </Typography>
             <Box
               sx={{
@@ -47,7 +49,7 @@ function MySubscription() {
                 variant="outlined"
                 onClick={handleManageSubscription}
               >
-                Manage Subscription
+                {t("Manage Subscription")}
               </Button>
             </Box>
           </>

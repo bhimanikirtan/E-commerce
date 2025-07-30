@@ -24,10 +24,12 @@ import {
   removeFromCartData,
 } from "../Thunk/cartThunk";
 import { openSnackbar } from "../redux/snackBarSlice";
+import { useTranslation } from "react-i18next";
 
 function Cart() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm", "ssm", "xs"));
   const { cartData } = useSelector((state) => state.cart);
@@ -49,7 +51,9 @@ function Cart() {
             alignItems: "center",
           }}
         >
-          <Typography variant={isMobile ? "h4" : "h3"}>Your cart</Typography>
+          <Typography variant={isMobile ? "h4" : "h3"}>
+            {t("Your cart")}
+          </Typography>
           <Box>
             <Button
               variant="contained"
@@ -63,7 +67,7 @@ function Cart() {
                 dispatch(clearCartData());
               }}
             >
-              clear
+              {t("clear")}
             </Button>
           </Box>
         </Box>
@@ -91,7 +95,7 @@ function Cart() {
                 textAlign: "center",
               }}
             >
-              Cart is Empty
+              {t("Cart is Empty")}
             </Typography>
           ) : (
             <Box
@@ -240,7 +244,7 @@ function Cart() {
                   }}
                 >
                   <Typography variant={isMobile ? "h4" : "h3"}>
-                    Order Summary
+                    {t("Order Summary")}
                   </Typography>
                 </Box>
                 <Box
@@ -252,7 +256,7 @@ function Cart() {
                   }}
                 >
                   <Typography variant={isMobile ? "h6" : "h5"}>
-                    Subtotal
+                    {t("Subtotal")}
                   </Typography>
                   <Typography variant={isMobile ? "h6" : "h5"}>
                     ${total}
@@ -267,7 +271,7 @@ function Cart() {
                   }}
                 >
                   <Typography variant={isMobile ? "h6" : "h5"} color="green">
-                    Delivery Free
+                    {t("Delivery Free")}
                   </Typography>
                   <Typography variant={isMobile ? "h6" : "h5"} color="green">
                     $0
@@ -287,7 +291,7 @@ function Cart() {
                   }}
                 >
                   <Typography variant={isMobile ? "h5" : "h4"}>
-                    Total
+                    {t("Total")}
                   </Typography>
                   <Typography variant={isMobile ? "h5" : "h4"}>
                     ${total}
@@ -369,7 +373,7 @@ function Cart() {
                     variant="contained"
                     className="black"
                   >
-                    Go to Checkout
+                    {t("Go to Checkout")}
                   </Button>
                 </Box>
               </Box>
