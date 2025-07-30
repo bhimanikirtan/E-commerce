@@ -8,10 +8,12 @@ import { Brightness4, Brightness7 } from "@mui/icons-material";
 import { useThemeContext } from "../context/themeContext";
 import { fetchUser } from "../redux/authSlice";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function UserProfileLayout() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const { user } = useSelector((state) => state.auth);
   const { mode, toggleTheme } = useThemeContext();
   useEffect(() => {
@@ -71,24 +73,27 @@ function UserProfileLayout() {
                     isActive ? activeStyle : inactiveStyle
                   }
                 >
-                  DashBoard
+                  {t("dashboard")}
                 </NavLink>
+
                 <NavLink
                   to="/profile/myAddress"
                   style={({ isActive }) =>
                     isActive ? activeStyle : inactiveStyle
                   }
                 >
-                  My Address
+                  {t("myAddress")}
                 </NavLink>
+
                 <NavLink
                   to="/profile/myOrders"
                   style={({ isActive }) =>
                     isActive ? activeStyle : inactiveStyle
                   }
                 >
-                  My Orders
+                  {t("myOrders")}
                 </NavLink>
+
                 {user?.isSubscribe !== "free" && (
                   <NavLink
                     to="/profile/myWishlist"
@@ -96,16 +101,17 @@ function UserProfileLayout() {
                       isActive ? activeStyle : inactiveStyle
                     }
                   >
-                    My Wishlist
+                    {t("myWishlist")}
                   </NavLink>
                 )}
+
                 <NavLink
                   to="/profile/mySubscription"
                   style={({ isActive }) =>
                     isActive ? activeStyle : inactiveStyle
                   }
                 >
-                  My Subscription
+                  {t("mySubscription")}
                 </NavLink>
               </Box>
 
@@ -118,15 +124,13 @@ function UserProfileLayout() {
               >
                 {user ? (
                   user.isSubscribe === "basic" ? (
-                    <Chip label="Basic Plan" color="warning" />
+                    <Chip label={t("basicPlan")} color="warning" />
                   ) : user.isSubscribe === "premium" ? (
-                    <Chip label="Premium Plan" color="success" />
+                    <Chip label={t("premiumPlan")} color="success" />
                   ) : (
-                    <Chip label="No Active Plan" color="info" />
+                    <Chip label={t("noActivePlan")} color="info" />
                   )
-                ) : (
-                  <></>
-                )}
+                ) : null}
               </Box>
 
               <IconButton

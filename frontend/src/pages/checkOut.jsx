@@ -26,10 +26,12 @@ import { addOrderData } from "../Thunk/orderThunk";
 import AddAddress from "../components/addAddress/addAddress";
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
+import { useTranslation } from "react-i18next";
 
 function CheckOut() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false);
   const [editAddMode, setEditAddMode] = useState(false);
@@ -142,11 +144,11 @@ function CheckOut() {
               flexDirection: { xs: "column", md: "row" },
             }}
           >
-            <Box sx={{ width: "100%", px: 2 }}>
+            <Box sx={{ width: "100%", px: 2, mt: 2 }}>
               {checked ? (
                 <>
                   <Typography variant="h5" textAlign="center" mb={2}>
-                    Select Payment Method
+                    {t("Select Payment Method")}
                   </Typography>
                   <FormControl component="fieldset">
                     <RadioGroup
@@ -164,35 +166,37 @@ function CheckOut() {
                 </>
               ) : (
                 <>
-                  <Typography
-                    variant={isMobile ? "h5" : "h4"}
-                    textAlign="center"
-                  >
-                    PERSONAL DETAILS
-                  </Typography>
+                  <Box sx={{ mt: 2 }}>
+                    <Typography
+                      variant={isMobile ? "h5" : "h4"}
+                      textAlign="center"
+                    >
+                      {t("PERSONAL DETAILS")}
+                    </Typography>
+                  </Box>
                   {user && (
                     <Box mt={4}>
                       <TextField
                         fullWidth
-                        label="Full Name"
+                        label={t("fullName")}
                         value={user.fullName}
                         sx={{ mb: 2 }}
                       />
                       <TextField
                         fullWidth
-                        label="Number"
+                        label={t("number")}
                         value={user.number}
                         sx={{ mb: 2 }}
                       />
                       <TextField
                         fullWidth
-                        label="Email"
+                        label={t("email")}
                         value={user.email}
                         sx={{ mb: 2 }}
                       />
                       <FormControl component="fieldset">
                         <RadioGroup
-                          name="address"
+                          name={t("address")}
                           value={selectedAddress?._id || ""}
                           onChange={handleChange}
                         >
@@ -246,7 +250,7 @@ function CheckOut() {
                             variant="contained"
                             onClick={() => setOpen(true)}
                           >
-                            + Add New Address
+                            {t("+ Add New Address")}
                           </Button>
                         )}
                       </Box>
@@ -284,22 +288,22 @@ function CheckOut() {
 
               <Box mt={4}>
                 <Typography variant={isMobile ? "h4" : "h3"}>
-                  Order Summary
+                  {t("Order Summary")}
                 </Typography>
                 <Box display="flex" justifyContent="space-between" mt={2}>
-                  <Typography variant="h6">Subtotal</Typography>
+                  <Typography variant="h6">{t("Subtotal")}</Typography>
                   <Typography variant="h6">${total}</Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="h6" color="green">
-                    Delivery Free
+                    {t("Delivery Free")}
                   </Typography>
                   <Typography variant="h6" color="green">
                     $0
                   </Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between" mt={2}>
-                  <Typography variant="h5">Total</Typography>
+                  <Typography variant="h5">{t("Total")}</Typography>
                   <Typography variant="h5">${total}</Typography>
                 </Box>
               </Box>
@@ -311,7 +315,7 @@ function CheckOut() {
                   fullWidth
                   sx={{ borderRadius: 7, p: 1.5 }}
                 >
-                  {checked ? "Place Order" : "Make A Payment"}
+                  {checked ? t("Place Order") : t("Make A Payment")}
                 </Button>
               </Box>
             </Box>

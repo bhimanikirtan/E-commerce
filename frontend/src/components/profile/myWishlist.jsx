@@ -16,10 +16,12 @@ import {
 import { useEffect } from "react";
 import { getOneproductData } from "../../Thunk/productThunk";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 function MyWishlist() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { userLikes } = useSelector((state) => state.wishList);
@@ -52,7 +54,7 @@ function MyWishlist() {
         gutterBottom
         fontWeight={600}
       >
-        My Wishlist
+        {t("myWishlist")}
       </Typography>
       <Box
         sx={{
@@ -106,7 +108,7 @@ function MyWishlist() {
           ))
         ) : (
           <Typography variant="h6" sx={{ m: 2 }}>
-            Your wishlist is empty.
+            {t("Your wishlist is empty.")}
           </Typography>
         )}
       </Box>

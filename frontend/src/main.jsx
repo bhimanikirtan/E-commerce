@@ -5,6 +5,7 @@ import SnackBar from "./comon/snackBar.jsx";
 import App from "./App.jsx";
 import { ThemeContextProvider } from "./context/themeContext.jsx";
 import "./App.css";
+import "./i18n.js";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>

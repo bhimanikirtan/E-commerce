@@ -28,9 +28,11 @@ import {
   getUserRatingData,
   updateUserRatingData,
 } from "../../Thunk/ratingThunk";
+import { useTranslation } from "react-i18next";
 function MyOrders() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { orderData } = useSelector((state) => state.order);
   const { UserProductRatingData } = useSelector((state) => state.rating);
@@ -130,11 +132,11 @@ function MyOrders() {
                 gutterBottom
                 fontWeight={600}
               >
-                My Orders
+                {t("myOrders")}
               </Typography>
 
               {orderData?.length === 0 ? (
-                <Typography variant="body1">No orders found.</Typography>
+                <Typography variant="body1">{t("No orders found.")}</Typography>
               ) : (
                 orderData.map((order) => (
                   <>

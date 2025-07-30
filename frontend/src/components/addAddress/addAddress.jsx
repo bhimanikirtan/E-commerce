@@ -12,9 +12,11 @@ import * as yup from "yup";
 import { useDispatch } from "react-redux";
 import { addAddress, getAddress, updateAddress } from "../../redux/authSlice";
 import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function AddAddress({ open, onClose, editData, editId, editAddMode }) {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const validationSchema = yup.object({
     address: yup.string().required("address is required"),
     city: yup.string().required("city is required"),
@@ -66,7 +68,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
           <Typography variant="h4">
-            {editAddMode ? "Update Address" : "Add Address"}
+            {editAddMode ? t("Update Address") : t("Add Address")}
           </Typography>
         </DialogTitle>
         <DialogContent>
@@ -81,7 +83,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
             >
               <Box>
                 <TextField
-                  label="Address"
+                  label={t("address")}
                   name="address"
                   value={formik.values.address}
                   onChange={formik.handleChange}
@@ -102,7 +104,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                 }}
               >
                 <TextField
-                  label="City"
+                  label={t("city")}
                   name="city"
                   value={formik.values.city}
                   onChange={formik.handleChange}
@@ -110,7 +112,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                   helperText={formik.touched.city && formik.errors.city}
                 />
                 <TextField
-                  label="Pincode"
+                  label={t("pincode")}
                   name="pincode"
                   type="number"
                   value={formik.values.pincode}
@@ -129,7 +131,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                 }}
               >
                 <TextField
-                  label="State"
+                  label={t("state")}
                   name="state"
                   value={formik.values.state}
                   onChange={formik.handleChange}
@@ -137,7 +139,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                   helperText={formik.touched.state && formik.errors.state}
                 />
                 <TextField
-                  label="Country"
+                  label={t("country")}
                   name="country"
                   value={formik.values.country}
                   onChange={formik.handleChange}
@@ -159,7 +161,7 @@ function AddAddress({ open, onClose, editData, editId, editAddMode }) {
                   type="submit"
                   disabled={formik.isSubmitting}
                 >
-                  {editAddMode ? "Update" : "Add"}
+                  {editAddMode ? t("Update") : t("Add")}
                 </Button>
               </Box>
             </Box>

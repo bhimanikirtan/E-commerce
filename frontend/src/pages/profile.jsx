@@ -9,6 +9,7 @@ import {
   useTheme,
   useMediaQuery,
 } from "@mui/material";
+import MenuItem from "@mui/material/MenuItem";
 import { useDispatch, useSelector } from "react-redux";
 import {
   addAddress,
@@ -20,11 +21,13 @@ import {
 
 import UploadIcon from "@mui/icons-material/Upload";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { openSnackbar } from "../redux/snackBarSlice";
+import { useTranslation } from "react-i18next";
 
 export default function ProfilePage() {
   const dispatch = useDispatch();
   const theme = useTheme();
-
+  const { t, i18n } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { user, address } = useSelector((state) => state.auth);
   const fileInputRef = useRef(null);
@@ -32,8 +35,6 @@ export default function ProfilePage() {
   const defaultAddress = Array.isArray(address)
     ? address?.find((addr) => addr.default === true)
     : null;
-
-  console.log(defaultAddress);
   const [formData, setFormData] = useState({
     fullName: "",
     email: "",
@@ -97,7 +98,6 @@ export default function ProfilePage() {
         form.append("image", imageFile);
       }
       await dispatch(updateUser(form)).unwrap();
-      console.log(addressFormData);
       if (defaultAddress) {
         await dispatch(
           updateAddress({ id: defaultAddress._id, values: addressFormData })
@@ -105,9 +105,20 @@ export default function ProfilePage() {
       } else {
         await dispatch(addAddress(addressFormData)).unwrap();
       }
+      dispatch(
+        openSnackbar({
+          massage: "Profile Update SuccessFully !",
+          severity: "success",
+        })
+      );
+      dispatch(fetchUser());
+      dispatch(getAddress());
     } catch (error) {
       console.error("Update error:", error);
     }
+  };
+  const changeLanguage = (lang) => {
+    i18n.changeLanguage(lang);
   };
 
   return (
@@ -118,10 +129,10 @@ export default function ProfilePage() {
           gutterBottom
           fontWeight={600}
         >
-          My Profile
+          {t("profile")}
         </Typography>
         <Typography color="text.secondary" sx={{ mb: 3 }}>
-          Update your profile and preferences.
+          {t("Update your profile and preferences")}
         </Typography>
         <Box sx={{ display: "flex", alignItems: "center", gap: 2, mb: 3 }}>
           <Avatar
@@ -157,8 +168,87 @@ export default function ProfilePage() {
             Remove
           </Button>
         </Box>
+        <Box sx={{ mb: 3, maxWidth: 300 }}>
+          <Typography variant="subtitle2" sx={{ mb: 1 }}>
+            {t("Select Language")}
+          </Typography>
+          <TextField
+            select
+            fullWidth
+            value={i18n.language == "en-GB" ? "en" : i18n.language}
+            onChange={(e) => changeLanguage(e.target.value)}
+            variant="outlined"
+            size="small"
+          >
+            <MenuItem value="en">
+              <img
+                src="https://hatscripts.github.io/circle-flags/flags/us.svg"
+                alt="English"
+                style={{
+                  width: 20,
+                  height: 14,
+                  marginRight: 8,
+                  borderRadius: 2,
+                }}
+              />
+              English
+            </MenuItem>
+            <MenuItem value="hi">
+              <img
+                src="https://hatscripts.github.io/circle-flags/flags/in.svg"
+                alt="Hindi"
+                style={{
+                  width: 20,
+                  height: 14,
+                  marginRight: 8,
+                  borderRadius: 2,
+                }}
+              />
+              हिंदी
+            </MenuItem>
+            <MenuItem value="gu">
+              <img
+                src="https://hatscripts.github.io/circle-flags/flags/in.svg"
+                alt="Gujarati"
+                style={{
+                  width: 20,
+                  height: 14,
+                  marginRight: 8,
+                  borderRadius: 2,
+                }}
+              />
+              ગુજરાતી
+            </MenuItem>
+            <MenuItem value="de">
+              <img
+                src="https://hatscripts.github.io/circle-flags/flags/de.svg"
+                alt="Germany"
+                style={{
+                  width: 20,
+                  height: 14,
+                  marginRight: 8,
+                  borderRadius: 2,
+                }}
+              />
+              Germany
+            </MenuItem>
+            <MenuItem value="zh">
+              <img
+                src="https://hatscripts.github.io/circle-flags/flags/cn.svg"
+                alt="China"
+                style={{
+                  width: 20,
+                  height: 14,
+                  marginRight: 8,
+                  borderRadius: 2,
+                }}
+              />
+              China
+            </MenuItem>
+          </TextField>
+        </Box>
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
-          Full Name
+          {t("fullName")}
         </Typography>
 
         <TextField
@@ -174,7 +264,7 @@ export default function ProfilePage() {
           }}
         />
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
-          Email
+          {t("email")}
         </Typography>
         <TextField
           name="email"
@@ -188,7 +278,7 @@ export default function ProfilePage() {
           }}
         />
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
-          Number
+          {t("number")}
         </Typography>
         <TextField
           name="number"
@@ -209,7 +299,7 @@ export default function ProfilePage() {
           }}
         />
         <Typography variant="subtitle2" sx={{ mb: 1 }}>
-          Address
+          {t("address")}
         </Typography>
         <TextField
           name="address"
@@ -225,7 +315,7 @@ export default function ProfilePage() {
         <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
           <Box sx={{ width: "40%", display: "flex", flexDirection: "column" }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              City
+              {t("city")}
             </Typography>
             <TextField
               name="city"
@@ -240,7 +330,7 @@ export default function ProfilePage() {
           </Box>
           <Box sx={{ width: "60%", display: "flex", flexDirection: "column" }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Pincode
+              {t("pincode")}
             </Typography>
             <TextField
               name="pincode"
@@ -257,7 +347,7 @@ export default function ProfilePage() {
         <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
           <Box sx={{ width: "60%", display: "flex", flexDirection: "column" }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              State
+              {t("state")}
             </Typography>
             <TextField
               name="state"
@@ -272,7 +362,7 @@ export default function ProfilePage() {
           </Box>
           <Box sx={{ width: "40%", display: "flex", flexDirection: "column" }}>
             <Typography variant="subtitle2" sx={{ mb: 1 }}>
-              Country
+              {t("country")}
             </Typography>
             <TextField
               name="country"
@@ -289,7 +379,7 @@ export default function ProfilePage() {
 
         <Box sx={{ display: "flex", gap: 2 }}>
           <Button variant="contained" className="black" onClick={handleSave}>
-            Save Changes
+            {t("saveChanges")}
           </Button>
         </Box>
       </Box>

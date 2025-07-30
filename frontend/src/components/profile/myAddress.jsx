@@ -25,10 +25,12 @@ import {
 import { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import AddAddress from "../addAddress/addAddress";
+import { useTranslation } from "react-i18next";
 
 function MyAddress() {
   const dispatch = useDispatch();
   const theme = useTheme();
+  const { t } = useTranslation();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const [open, setOpen] = useState(false);
   const [editAddMode, setEditAddMode] = useState(false);
@@ -100,7 +102,7 @@ function MyAddress() {
           >
             <Box>
               <Typography variant={isMobile ? "h6" : "h4"} fontWeight={600}>
-                My Address
+                {t("myAddress")}
               </Typography>
             </Box>
 
@@ -108,7 +110,7 @@ function MyAddress() {
               {user?.isSubscribe === "basic" ||
               (user?.isSubscribe === "free" && address?.length >= 1) ? null : (
                 <Button variant="contained" onClick={() => setOpen(true)}>
-                  + Add New Address
+                  {t("+ Add New Address")}
                 </Button>
               )}
             </Box>
@@ -134,11 +136,11 @@ function MyAddress() {
                   <TableRow>
                     <TableCell>Default</TableCell>
                     <TableCell>S. No</TableCell>
-                    <TableCell>Address</TableCell>
-                    <TableCell>City</TableCell>
-                    <TableCell>Pincode</TableCell>
-                    <TableCell>State</TableCell>
-                    <TableCell>Country</TableCell>
+                    <TableCell>{t("address")}</TableCell>
+                    <TableCell>{t("city")}</TableCell>
+                    <TableCell>{t("pincode")}</TableCell>
+                    <TableCell>{t("state")}</TableCell>
+                    <TableCell>{t("country")}</TableCell>
                     <TableCell align="center">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -146,7 +148,7 @@ function MyAddress() {
                 {currentItems?.length === 0 ? (
                   <TableBody>
                     <TableRow>
-                      <TableCell colSpan={8}>No address found</TableCell>
+                      <TableCell colSpan={8}>{t("No address found")}</TableCell>
                     </TableRow>
                   </TableBody>
                 ) : (

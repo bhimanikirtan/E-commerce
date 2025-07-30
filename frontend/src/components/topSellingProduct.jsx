@@ -10,9 +10,11 @@ import { getAllproductsData } from "../Thunk/productThunk";
 import { useSelector, useDispatch } from "react-redux";
 import ProductCard from "../comon/productCard";
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
 function TopSellingProduct() {
   const dispatch = useDispatch();
+  const { t } = useTranslation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
   const { products } = useSelector((state) => state.products);
@@ -35,7 +37,11 @@ function TopSellingProduct() {
 
   return (
     <>
-      <Container maxWidth={false} disableGutters  sx={{ backgroundColor: theme.palette.background.container }}>
+      <Container
+        maxWidth={false}
+        disableGutters
+        sx={{ backgroundColor: theme.palette.background.container }}
+      >
         <Grid
           item
           xs={12}
@@ -48,7 +54,7 @@ function TopSellingProduct() {
           }}
         >
           <Typography variant={isMobile ? "h4" : "h2"} component="h2">
-            TOP SELLING
+            {t("TOP SELLING")}
           </Typography>
         </Grid>
         <Grid
