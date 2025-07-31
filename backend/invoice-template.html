@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Invoice</title>
+        <style>
+    body { font-family: Arial, sans-serif; padding: 40px; }
+    h1 { color: #A66914; text-align: center; }
+    .thankyou { color: green; text-align: center; margin-bottom: 20px; }
+    .section-title { font-weight: bold; margin-top: 20px; color: #A66914; }
+    .row { display: flex; justify-content: space-between; }
+    .info { margin-bottom: 10px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+    th, td { border: 1px solid #000; padding: 10px; text-align: center; }
+    .payment-details { margin-top: 30px; }
+    .footer { margin-top: 40px; text-align: center; font-size: 14px; color: gray; }
+  </style>
+    </head>
+    <body>
+        <h1>SHOP.IN</h1>
+        <p class="thankyou">Thanks for your order, {{fullName}}!</p>
+        <p><strong>Order Date:</strong> {{orderDate}}</p>
+
+        <div class="row">
+            <div>
+                <p class="section-title">Customer Info</p>
+                <p class="info"><strong>Name:</strong> {{fullName}}</p>
+                <p class="info"><strong>Email:</strong> {{email}}</p>
+            </div>
+
+            <div>
+                <p class="section-title">Shipping Info</p>
+                <p class="info"><strong>Address:</strong> {{address}}</p>
+                <p class="info"><strong>City:</strong> {{city}}, {{pincode}}</p>
+                <p class="info"><strong>State:</strong> {{state}},
+                    {{country}}</p>
+            </div>
+        </div>
+
+        <p class="section-title">Order Summary</p>
+        <table>
+            <thead>
+                <tr><th>Item</th><th>Qty</th><th>Size</th><th>Color</th><th>Price</th></tr>
+            </thead>
+            <tbody>
+                {{#each products}}
+                <tr>
+                    <td>{{name}}</td>
+                    <td>{{quantity}}</td>
+                    <td>{{size}}</td>
+                    <td>{{color}}</td>
+                    <td>₹{{price}}</td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+
+        <div class="payment-details">
+            <p class="section-title">Payment & Order Details</p>
+            <p><strong>Total:</strong> ₹{{total}}</p>
+            <p><strong>Status:</strong> {{status}}</p>
+            <p><strong>Payment Mode:</strong> {{paymentMode}}</p>
+            <p><strong>Payment ID:</strong> {{paymentId}}</p>
+            <p><strong>Payment Status:</strong> {{paymentStatus}}</p>
+        </div>
+
+        <div class="footer">
+            <p>We’ll notify you once your items are shipped.</p>
+            <p>Thanks for shopping with SHOP.IN</p>
+            <p>This is an automated invoice. Please do not reply.</p>
+            <p>&copy; {{year}} SHOP.IN</p>
+        </div>
+    </body>
+</html>

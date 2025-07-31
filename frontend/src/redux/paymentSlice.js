@@ -1,5 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { handleSubscriptionData, sendPaymentData } from "../Thunk/paymentThunk";
+import {
+  handleSubscriptionData,
+  invoiceData,
+  sendPaymentData,
+} from "../Thunk/paymentThunk";
 
 const initialState = {};
 
@@ -18,6 +22,18 @@ const paymentSlice = createSlice({
         state.loading = false;
       })
       .addCase(sendPaymentData.rejected, (state) => {
+        state.loading = false;
+        state.error = true;
+      })
+
+      .addCase(invoiceData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(invoiceData.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(invoiceData.rejected, (state) => {
         state.loading = false;
         state.error = true;
       })
