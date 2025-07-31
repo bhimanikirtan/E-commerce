@@ -6,16 +6,17 @@ const { generateJWTToken } = require("../middleware/auth");
 
 const register = async (req, res) => {
   try {
-    const {
-      fullName,
-      number,
-      email,
-      password,
-      confirmPassword,
-      role = "user",
-    } = req.body;
+    const { fullName, number, email, password, confirmPassword, role } =
+      req.body;
 
-    if (!fullName || !number || !email || !password || !confirmPassword) {
+    if (
+      !fullName ||
+      !number ||
+      !email ||
+      !password ||
+      !confirmPassword ||
+      !role
+    ) {
       return res
         .status(400)
         .json({ msg: "All fields are required", status: 400 });

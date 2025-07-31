@@ -57,6 +57,10 @@ export default function RegisterPage() {
       .string()
       .min(8, "Password should be of minimum 8 characters length")
       .required("Password is required"),
+    role: yup
+      .string()
+      .oneOf(["user", "vendor", "admin"], "Invalid role")
+      .required("Role is required"),
   });
   const formik = useFormik({
     initialValues: {
@@ -65,6 +69,7 @@ export default function RegisterPage() {
       email: "",
       password: "",
       confirmPassword: "",
+      role: "user",
     },
     validationSchema: validationSchema,
     onSubmit: async (values) => {
@@ -93,7 +98,6 @@ export default function RegisterPage() {
   return (
     <>
       <Container maxWidth={false} disableGutters>
-
         <Box
           sx={{
             width: "100%",
@@ -282,6 +286,27 @@ export default function RegisterPage() {
                             ),
                           }}
                         />
+                      </Box>
+                      <Box sx={{ width: "100%" }}>
+                        <TextField
+                          select
+                          fullWidth
+                          name="role"
+                          label="Select Role"
+                          value={formik.values.role}
+                          onChange={formik.handleChange}
+                          error={
+                            formik.touched.role && Boolean(formik.errors.role)
+                          }
+                          helperText={formik.touched.role && formik.errors.role}
+                          SelectProps={{
+                            native: true,
+                          }}
+                        >
+                          <option value="user">User</option>
+                          <option value="vendor">Vendor</option>
+                          <option value="admin">Admin</option>
+                        </TextField>
                       </Box>
 
                       <Button
