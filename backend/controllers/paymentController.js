@@ -1,5 +1,9 @@
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 const Order = require("../models/order");
+const path = require("path");
+const fs = require("fs");
+const generatePDF = require("../util/pdfDownload");
+const sendEmail = require("../util/sendEmail");
 const payment = async (req, res) => {
   try {
     const { orderId } = req.body;
@@ -24,7 +28,7 @@ const payment = async (req, res) => {
       payment_method_types: ["card"],
       line_items,
       mode: "payment",
-      success_url: `${process.env.REACTBASE_URL}/orderSuccess`,
+      success_url: `${process.env.REACTBASE_URL}/orderSuccess?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${process.env.REACTBASE_URL}/checkOut`,
       metadata: { orderId: order._id.toString() },
     });
@@ -35,6 +39,54 @@ const payment = async (req, res) => {
     res.status(500).json({ msg: "Payment failed" });
   }
 };
+const invoice = async (req, res) => {
+  try {
+    const id = req.params.session_id;
+    const session = await stripe.checkout.sessions.retrieve(id);
+    const orderID = session.metadata.orderId;
+
+    const order = await Order.findById(orderID)
+      .populate("userId")
+      .populate("orderData.products.productId");
+
+    const invoiceDir = path.join(__dirname, "invoices");
+    if (!fs.existsSync(invoiceDir)) {
+      fs.mkdirSync(invoiceDir);
+    }
+
+    const invoicePath = path.join(invoiceDir, `${orderID}.pdf`);
+
+    if (!fs.existsSync(invoicePath)) {
+      await generatePDF(order, invoicePath);
+    }
+
+    await sendEmail(order.userId.email, invoicePath);
+
+    fs.readFile(invoicePath, (err, data) => {
+      if (err) {
+        console.error("Read error:", err);
+        return res.status(500).send("Could not read invoice.");
+      }
+
+      res.set({
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="${orderID}.pdf"`,
+      });
+
+      res.send(data);
+
+      fs.unlink(invoicePath, (unlinkErr) => {
+        if (unlinkErr) {
+          console.error("Failed to delete invoice:", unlinkErr);
+        }
+      });
+    });
+  } catch (err) {
+    console.error("Invoice error:", err);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
 const handleSubscription = async (req, res) => {
   const { subscribId, userId } = req.body;
   console.log("subscribId", subscribId);
@@ -66,4 +118,5 @@ const handleSubscription = async (req, res) => {
 module.exports = {
   payment,
   handleSubscription,
+  invoice,
 };

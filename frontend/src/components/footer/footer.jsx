@@ -42,7 +42,6 @@ function Footer() {
       openSnackbar({ massage: err.message, severity: "error" });
     }
   };
-  console.log(user);
   useEffect(() => {
     dispatch(fetchUser());
   }, [dispatch]);
