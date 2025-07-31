@@ -44,6 +44,7 @@ export const registerUser = createAsyncThunk(
   "user/register",
   async (values, { dispatch, rejectWithValue }) => {
     try {
+      console.log(values, "valueeeeeeeeeeeeeeeee");
       const response = await registerUserAPI(values);
       dispatch(
         openSnackbar({
