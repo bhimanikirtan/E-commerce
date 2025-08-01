@@ -9,7 +9,10 @@ import {
   Avatar,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getVendorDetailsData } from "../Thunk/vendorThunk";
+import {
+  getVendorDetailsData,
+  updateVendorDetailsData,
+} from "../Thunk/vendorThunk";
 import { useRef } from "react";
 
 function VendorAccount() {
@@ -67,7 +70,7 @@ function VendorAccount() {
     fileInputRef.current.click();
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const form = new FormData();
     form.append("businessname", formData.businessname);
     form.append("businessnumber", formData.businessnumber);
@@ -84,6 +87,8 @@ function VendorAccount() {
     for (let [key, value] of form.entries()) {
       console.log(`${key}:`, value);
     }
+    await dispatch(updateVendorDetailsData(form)).unwrap();
+    await dispatch(getVendorDetailsData());
   };
 
   return (
@@ -261,11 +266,15 @@ function VendorAccount() {
           </Box>
         </Box>
 
-        <Box textAlign="right">
-          <Button variant="contained" size="large" onClick={handleSubmit}>
-            Save Changes
-          </Button>
-        </Box>
+        {vendor ? (
+          <Box textAlign="right">
+            <Button variant="contained" size="large" onClick={handleSubmit}>
+              Save Changes
+            </Button>
+          </Box>
+        ) : (
+          <></>
+        )}
       </Box>
     </Container>
   );

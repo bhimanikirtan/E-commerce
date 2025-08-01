@@ -59,7 +59,6 @@ const getVendorDetails = async (req, res) => {
         .status(200)
         .json({ status: 200, msg: "Dont have VendorDetails" });
     }
-    console.log(vendorDetails);
     return res.status(201).json({
       status: 200,
       msg: "vendorDetails fetch successfully",
@@ -70,94 +69,54 @@ const getVendorDetails = async (req, res) => {
     res.status(500).json({ status: 500, msg: "Address fetch Failed" });
   }
 };
-// const deleteAddress = async (req, res) => {
-//   try {
-//     // const id = req.user.id;
-//     const addId = req.params.id;
-//     const deleteAddress = await Address.findOneAndUpdate(
-//       { _id: addId },
-//       { deletedAt: Date.now() }
-//     );
 
-//     return res.status(200).json({
-//       status: 200,
-//       msg: "Deleted address successfully",
-//       deleteAddress,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     return res.status(500).json({ status: 500, msg: "Delete address error" });
-//   }
-// };
+const updateVendorDetails = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const updatebusinessData = {
+      businessname: req.body.businessname,
+      businessnumber: req.body.businessnumber,
+      businessAddress: {
+        address: req.body.address,
+        city: req.body.city,
+        state: req.body.state,
+        pincode: req.body.pincode,
+        country: req.body.country,
+      },
+    };
+    if (req.file) {
+      updatebusinessData.companylogo = req.file.path;
+    }
+    const updateVendorData = {
+      fullName: req.body.fullName,
+      number: req.body.number,
+    };
+    const updateVendor = await User.findByIdAndUpdate(id, updateVendorData, {
+      new: true,
+    });
 
-// const updateAddress = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const addressId = req.params.id;
+    const updateVendorbusinessData = await VendorDetails.findOneAndUpdate(
+      { createdBy: id },
+      updatebusinessData,
+      {
+        new: true,
+      }
+    );
 
-//     const updatedAddress = await Address.findOneAndUpdate(
-//       { _id: addressId, userId },
-//       {
-//         $set: {
-//           address: req.body.address,
-//           city: req.body.city,
-//           pincode: req.body.pincode,
-//           country: req.body.country,
-//           state: req.body.state,
-//         },
-//       },
-//       { new: true }
-//     );
-
-//     if (!updatedAddress) {
-//       return res.status(404).json({ status: 404, msg: "Address not found" });
-//     }
-
-//     return res.status(200).json({
-//       status: 200,
-//       msg: "Address updated successfully",
-//       data: updatedAddress,
-//     });
-//   } catch (error) {
-//     console.error("Error updating address:", error);
-//     return res.status(500).json({ status: 500, msg: "Error updating address" });
-//   }
-// };
-
-// const setDefaultAddress = async (req, res) => {
-//   try {
-//     const userId = req.user.id;
-//     const addressId = req.params.id;
-
-//     await Address.updateMany({ userId }, { $set: { default: false } });
-
-//     const updatedAddress = await Address.findOneAndUpdate(
-//       { _id: addressId, userId },
-//       { $set: { default: true } },
-//       { new: true }
-//     );
-
-//     if (!updatedAddress) {
-//       return res.status(404).json({ status: false, msg: "Address not found" });
-//     }
-
-//     return res.status(200).json({
-//       status: true,
-//       msg: "Default address set successfully",
-//       data: updatedAddress,
-//     });
-//   } catch (error) {
-//     console.error("Set default failed:", error);
-//     return res
-//       .status(500)
-//       .json({ status: false, msg: "Failed to set default address" });
-//   }
-// };
+    return res.status(201).json({
+      status: 201,
+      msg: "VendorProfile updated successfully",
+      updateVendorbusinessData,
+      updateVendor,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 500, msg: "ProfileUpdate Failed" });
+  }
+};
 
 module.exports = {
   addVendorDetails,
   getVendorDetails,
-  //   deleteAddress,
-  //   updateAddress,
-  //   setDefaultAddress,
+  updateVendorDetails,
 };

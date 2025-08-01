@@ -1,6 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { openSnackbar } from "../redux/snackBarSlice";
-import { addVendorDetailsAPI, getVendorDetailsAPI } from "../apis/vendorAPI";
+import {
+  addVendorDetailsAPI,
+  getVendorDetailsAPI,
+  updateVendorDetailsAPI,
+} from "../apis/vendorAPI";
 
 export const addVendorDetailsData = createAsyncThunk(
   "vendor/addVendorDetails",
@@ -26,6 +30,24 @@ export const getVendorDetailsData = createAsyncThunk(
     try {
       const response = await getVendorDetailsAPI();
       console.log(response);
+      return response;
+    } catch (error) {
+      return error.response?.data || "Failed to get vendor details";
+    }
+  }
+);
+export const updateVendorDetailsData = createAsyncThunk(
+  "vendor/updateVendorDetails",
+  async (values, { dispatch }) => {
+    try {
+      const response = await updateVendorDetailsAPI(values);
+      //   console.log(response);
+      dispatch(
+        openSnackbar({
+          massage: "VendorProfile updated successfully",
+          severity: "success",
+        })
+      );
       return response;
     } catch (error) {
       return error.response?.data || "Failed to get vendor details";
