@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import {
   addVendorDetailsData,
   getVendorDetailsData,
+  updateVendorDetailsData,
 } from "../Thunk/vendorThunk";
 
 const initialState = {
@@ -37,6 +38,19 @@ const vendorSlice = createSlice({
         state.vendor = action.payload.vendorDetails;
       })
       .addCase(getVendorDetailsData.rejected, (state, action) => {
+        state.error = action.error.message;
+        state.loading = false;
+      })
+      /*********update vendor Details***********/
+      .addCase(updateVendorDetailsData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateVendorDetailsData.fulfilled, (state) => {
+        state.loading = false;
+        // state.vendor = action.payload.vendorDetails;
+      })
+      .addCase(updateVendorDetailsData.rejected, (state, action) => {
         state.error = action.error.message;
         state.loading = false;
       });
