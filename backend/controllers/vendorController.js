@@ -13,12 +13,16 @@ const addVendorDetails = async (req, res) => {
       pincode,
       country,
     } = req.body;
+
+    const companylogo = req.file ? req.file.path : null;
+
     const findUser = await User.findOne({ _id: id });
     if (!findUser) {
       return res.status(404).json({ status: 404, msg: "User not found" });
     }
     const newVendor = await VendorDetails.create({
       createdBy: id,
+      companylogo,
       businessname,
       businessemail,
       businessnumber,
@@ -44,23 +48,28 @@ const addVendorDetails = async (req, res) => {
   }
 };
 
-// const getAllAddress = async (req, res) => {
-//   try {
-//     const id = req.user.id;
-//     const addresses = await Address.find({ userId: id, deletedAt: null });
-//     if (!addresses) {
-//       return res.status(200).json({ status: 200, msg: "Dont have Address" });
-//     }
-//     return res.status(201).json({
-//       status: 200,
-//       msg: "Address fetch successfully",
-//       addresses,
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ status: 500, msg: "Address fetch Failed" });
-//   }
-// };
+const getVendorDetails = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const vendorDetails = await VendorDetails.findOne({
+      createdBy: id,
+    }).populate("createdBy");
+    if (!vendorDetails) {
+      return res
+        .status(200)
+        .json({ status: 200, msg: "Dont have VendorDetails" });
+    }
+    console.log(vendorDetails);
+    return res.status(201).json({
+      status: 200,
+      msg: "vendorDetails fetch successfully",
+      vendorDetails,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ status: 500, msg: "Address fetch Failed" });
+  }
+};
 // const deleteAddress = async (req, res) => {
 //   try {
 //     // const id = req.user.id;
@@ -147,7 +156,7 @@ const addVendorDetails = async (req, res) => {
 
 module.exports = {
   addVendorDetails,
-  //   getAllAddress,
+  getVendorDetails,
   //   deleteAddress,
   //   updateAddress,
   //   setDefaultAddress,

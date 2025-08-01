@@ -7,6 +7,7 @@ const vendorDetailSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    companylogo: { type: String },
     businessname: { type: String },
     businessemail: { type: String },
     businessnumber: { type: Number },

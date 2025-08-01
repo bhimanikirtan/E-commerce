@@ -6,6 +6,7 @@ import {
   Dialog,
   DialogTitle,
   DialogContent,
+  Avatar,
 } from "@mui/material";
 import { useFormik } from "formik";
 import * as yup from "yup";
@@ -13,10 +14,12 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { addVendorDetailsData } from "../Thunk/vendorThunk";
+import { useState } from "react";
 
 function AddVendorDetails({ open, onClose, editData, editAddMode }) {
   const dispatch = useDispatch();
   const { t } = useTranslation();
+  const [imageFile, setImageFile] = useState(null);
   const validationSchema = yup.object({
     businessname: yup.string().required("businessname is required"),
     businessemail: yup
@@ -44,7 +47,23 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
     validationSchema: validationSchema,
     onSubmit: async (values) => {
       try {
-        await dispatch(addVendorDetailsData(values)).unwrap();
+        console.log(values);
+        const formData = new FormData();
+
+        formData.append("businessname", values.businessname);
+        formData.append("businessemail", values.businessemail);
+        formData.append("businessnumber", values.businessnumber);
+        formData.append("address", values.address);
+        formData.append("city", values.city);
+        formData.append("state", values.state);
+        formData.append("pincode", values.pincode);
+        formData.append("country", values.country);
+
+        if (imageFile instanceof File) {
+          formData.append("companylogo", imageFile);
+        }
+
+        await dispatch(addVendorDetailsData(formData)).unwrap();
 
         formik.resetForm();
         onClose();
@@ -56,6 +75,9 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
   const handleClose = () => {
     formik.resetForm();
     onClose();
+  };
+  const handleFileChange = (e) => {
+    setImageFile(e.target.files[0]);
   };
   useEffect(() => {
     if (editAddMode && editData) {
@@ -86,6 +108,41 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                 gap: 2,
               }}
             >
+              <Box display="flex" alignItems="center" gap={2}>
+                {/* Avatar Preview */}
+                <Avatar
+                  src={
+                    imageFile
+                      ? typeof imageFile === "string"
+                        ? imageFile
+                        : URL.createObjectURL(imageFile)
+                      : ""
+                  }
+                  alt="Company Logo"
+                  sx={{ width: 56, height: 56 }}
+                />
+
+                {/* Upload Button */}
+                <Button variant="outlined" component="label">
+                  {formik.values.companylogo
+                    ? formik.values.companylogo.name
+                    : t("Upload Company Logo")}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    hidden
+                    name="companylogo"
+                    onChange={handleFileChange}
+                  />
+                </Button>
+              </Box>
+
+              {/* Error Message */}
+              {formik.touched.companylogo && formik.errors.companylogo && (
+                <Typography color="error" variant="body2" mt={1}>
+                  {formik.errors.companylogo}
+                </Typography>
+              )}
               <Box>
                 <TextField
                   label={t("businessname")}

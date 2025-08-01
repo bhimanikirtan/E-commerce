@@ -54,6 +54,7 @@ export default function LoginPage() {
           navigate("/admin/adminDashboard");
         } else if (user.role === "vendor") {
           navigate("/vendor/vendorDashboard");
+          
         } else {
           navigate("/");
         }
