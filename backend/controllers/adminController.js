@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Order = require("../models/order");
 const Product = require("../models/product");
+const VendorDetails = require("../models/vendorDetails");
 const nodemailer = require("nodemailer");
 
 const getAllOrdersAdmin = async (req, res) => {
@@ -240,14 +241,39 @@ const getAnalyticsData = async (req, res) => {
         },
       },
     ]);
-    // console.log(productStatus);
-    // console.log(monthlySales);
-    // console.log(userGrowth);
-    // console.log(orderStatus);
 
     res.json({ productStatus, monthlySales, userGrowth, orderStatus });
   } catch (err) {
     res.status(500).json({ error: "Failed to get analytics data" });
+  }
+};
+const getAllvendor = async (req, res) => {
+  try {
+    const allVendor = await VendorDetails.find({});
+    return res
+      .status(200)
+      .json({ status: 200, msg: "fetch all vendors", allVendor });
+  } catch (error) {
+    console.error("error to fetch vendors", error);
+    return res.status(500).json({ status: 500, msg: "error to fetch vendors" });
+  }
+};
+const updateVendorstatus = async (req, res) => {
+  try {
+    const vendorId = req.params.id;
+    const updateVendor = await VendorDetails.findByIdAndUpdate(
+      vendorId,
+      { status: "Approved" },
+      { new: true }
+    );
+    return res
+      .status(200)
+      .json({ status: 200, msg: "vendor status update", updateVendor });
+  } catch (error) {
+    console.error("error to fetch vendors", error);
+    return res
+      .status(500)
+      .json({ status: 500, msg: "error to update vendors" });
   }
 };
 
@@ -259,4 +285,6 @@ module.exports = {
   getAllCount,
   blockUser,
   getAnalyticsData,
+  getAllvendor,
+  updateVendorstatus,
 };

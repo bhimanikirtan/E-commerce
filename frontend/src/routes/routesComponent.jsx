@@ -30,6 +30,7 @@ import VendorLayout from "../layout/vendorSideBarLayout";
 import VendorProducts from "../vendor/vendorProducts";
 import VendorOrders from "../vendor/vendorOrders";
 import VendorAccount from "../vendor/vendorAccount";
+import ManageVendors from "../admin/manageVendors";
 
 const RoutesComponent = () => {
   return (
@@ -64,6 +65,7 @@ const RoutesComponent = () => {
             <Route path="/admin/manageOrders" element={<ManageOrders />} />
             <Route path="/admin/manageUsers" element={<ManageUsers />} />
             <Route path="/admin/manageNewsLetter" element={<NewsLetter />} />
+            <Route path="/admin/manageVendors" element={<ManageVendors />} />
             <Route path="/dashBoardCharts" element={<DashboardCharts />} />
           </Route>
           <Route element={<UserProfileLayout />}>

@@ -9,13 +9,17 @@ const {
   getAllOrdersAdmin,
   updateOrdersAdmin,
   getAnalyticsData,
+  getAllvendor,
+  updateVendorstatus,
 } = require("../controllers/adminController");
 
 router.get("/AllUsers", upload.single("image"), getAllUsers);
 router.put("/blockUser/:id", blockUser);
 router.put("/updateUserByAdmin/:id", upload.single("image"), updateUserByAdmin);
+router.put("/updateVendorStatus/:id", updateVendorstatus);
 router.get("/getAllCount", getAllCount);
 router.get("/getAllOrder", getAllOrdersAdmin);
+router.get("/getAllvendors", getAllvendor);
 router.get("/analytics", getAnalyticsData);
 router.put("/updateOrder/:id", updateOrdersAdmin);
 

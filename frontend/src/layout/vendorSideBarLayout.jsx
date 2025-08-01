@@ -100,8 +100,8 @@ function VendorLayout() {
         }}
       >
         <Toolbar />
-        <Box sx={{ overflow: "auto" }}>
-          <List>
+        <Box sx={{ overflow: "auto", mt: 3 }}>
+          <List sx={{ display: "flex", flexDirection: "column", gap: 3 }}>
             {menuItems.map((item) => (
               <ListItem key={item.label} disablePadding>
                 <ListItemButton

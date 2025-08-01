@@ -18,6 +18,11 @@ const vendorDetailSchema = new mongoose.Schema(
       pincode: { type: Number },
       country: { type: String },
     },
+    status: {
+      type: String,
+      enum: ["pending", "Approved"],
+      default: "pending",
+    },
   },
   { timestamps: true }
 );
