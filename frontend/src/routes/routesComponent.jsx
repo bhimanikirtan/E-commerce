@@ -25,6 +25,11 @@ import NewsLetter from "../admin/newsLetter";
 import MySubscription from "../components/profile/mySubscription";
 import OrderSuccessPage from "../pages/orderSuccess";
 import SubscribSuccessPage from "../pages/subscribeSuccess";
+import VendorDashboard from "../vendor/vendorDashboard";
+import VendorLayout from "../layout/vendorSideBarLayout";
+import VendorProducts from "../vendor/vendorProducts";
+import VendorOrders from "../vendor/vendorOrders";
+import VendorAccount from "../vendor/vendorAccount";
 
 const RoutesComponent = () => {
   return (
@@ -44,6 +49,15 @@ const RoutesComponent = () => {
           <Route path="/checkout" element={<CheckOut />} />
           <Route path="/orderSuccess" element={<OrderSuccessPage />} />
           <Route path="/subscribSuccess" element={<SubscribSuccessPage />} />
+          <Route element={<VendorLayout />}>
+            <Route
+              path="/vendor/vendorDashboard"
+              element={<VendorDashboard />}
+            />
+            <Route path="/vendor/vendorProducts" element={<VendorProducts />} />
+            <Route path="/vendor/vendorOrders" element={<VendorOrders />} />
+            <Route path="/vendor/vendorAccount" element={<VendorAccount />} />
+          </Route>
           <Route element={<Layout />}>
             <Route path="/admin/adminDashboard" element={<AdminDashboard />} />
             <Route path="/admin/manageProducts" element={<ManageProducts />} />
