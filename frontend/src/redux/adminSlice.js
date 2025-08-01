@@ -7,6 +7,8 @@ import {
   updateUserByAdminData,
   getAllCountByAdminData,
   getAnalyticsData,
+  getAllVendorsData,
+  updateVendorStatusData,
 } from "../Thunk/adminThunk";
 
 const initialState = {
@@ -16,6 +18,7 @@ const initialState = {
   userGrowth: [],
   orderStatus: [],
   productStock: [],
+  allVendors: [],
   usersCount: null,
   orderCount: null,
   productCount: null,
@@ -130,6 +133,36 @@ const adminSlice = createSlice({
         );
       })
       .addCase(updateOrderAdminData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error fetching Products";
+      })
+
+      /*************************************getAllVendorsData**************************/
+
+      .addCase(getAllVendorsData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getAllVendorsData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.allVendors = action.payload.allVendor;
+      })
+      .addCase(getAllVendorsData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error fetching Products";
+      })
+
+      /*************************************updateVendorstatusData**************************/
+
+      .addCase(updateVendorStatusData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateVendorStatusData.fulfilled, (state) => {
+        state.loading = false;
+        // state.allVendors = action.payload.allVendor;
+      })
+      .addCase(updateVendorStatusData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error fetching Products";
       });

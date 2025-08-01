@@ -38,6 +38,11 @@ function Layout() {
       path: "/admin/manageNewsletter",
       icon: <SendIcon />,
     },
+    {
+      label: "Vendors",
+      path: "/admin/manageVendors",
+      icon: <SendIcon />,
+    },
   ];
 
   const handleLogout = () => {
@@ -84,7 +89,6 @@ function Layout() {
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
-              gap: 2,
               mt: 2,
             }}
           >

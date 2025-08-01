@@ -7,6 +7,7 @@ import {
   Container,
   Divider,
   Avatar,
+  Chip,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -130,6 +131,12 @@ function VendorAccount() {
           </Box>
           <Box>
             <Typography variant="h3">{vendor?.businessname}</Typography>
+            <Chip
+              label={vendor.status}
+              color={vendor.status === "Approved" ? "success" : "warning"}
+              variant="filled"
+              size="small"
+            />
           </Box>
         </Box>
         <Box>
@@ -267,7 +274,7 @@ function VendorAccount() {
         </Box>
 
         {vendor ? (
-          <Box textAlign="right">
+          <Box textAlign="left" sx={{ mt: 3 }}>
             <Button variant="contained" size="large" onClick={handleSubmit}>
               Save Changes
             </Button>
