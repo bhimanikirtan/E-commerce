@@ -35,11 +35,12 @@ function VendorAccount() {
     country: "",
   });
 
-  const { vendor } = useSelector((state) => state.vendor);
   useEffect(() => {
     dispatch(getVendorDetailsData());
   }, [dispatch]);
 
+  const { vendor } = useSelector((state) => state.vendor);
+  console.log(vendor, "+++++++++++++++++++");
   useEffect(() => {
     if (vendor) {
       setFormData({
@@ -94,195 +95,203 @@ function VendorAccount() {
 
   return (
     <Container maxWidth="xl" sx={{ py: 2 }}>
-      <Box>
-        <Typography variant="h4" fontWeight={700} gutterBottom>
-          Account Settings
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 5,
-          }}
-        >
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            onChange={handleFileChange}
-            style={{ display: "none" }}
-          />
-
-          <Box
-            onClick={handleAvatarClick}
-            sx={{ cursor: "pointer", display: "inline-block" }}
-          >
-            <Avatar
-              src={
-                imageFile
-                  ? typeof imageFile === "string"
-                    ? imageFile
-                    : URL.createObjectURL(imageFile)
-                  : ""
-              }
-              alt="User Avatar"
-              sx={{ width: 80, height: 80 }}
-            />
-          </Box>
-          <Box>
-            <Typography variant="h3">{vendor?.businessname}</Typography>
-            <Chip
-              label={vendor.status}
-              color={vendor.status === "Approved" ? "success" : "warning"}
-              variant="filled"
-              size="small"
-            />
-          </Box>
-        </Box>
-        <Box>
-          <Typography variant="h6" gutterBottom fontWeight={600}>
-            Business Information
+      {!vendor ? (
+        <>
+          <Typography variant="h4">
+            Please First Fill the Details on Dashboard !
           </Typography>
-          <Divider sx={{ mb: 2 }} />
-
+        </>
+      ) : (
+        <Box>
+          <Typography variant="h4" fontWeight={700} gutterBottom>
+            Account Settings
+          </Typography>
           <Box
             sx={{
               display: "flex",
-              flexDirection: "column",
-              gap: 2,
+              alignItems: "center",
+              gap: 5,
             }}
           >
-            <Box>
-              <TextField
-                fullWidth
-                label="Business Name"
-                name="businessname"
-                value={formData.businessname}
-                onChange={handleChange}
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
+
+            <Box
+              onClick={handleAvatarClick}
+              sx={{ cursor: "pointer", display: "inline-block" }}
+            >
+              <Avatar
+                src={
+                  imageFile
+                    ? typeof imageFile === "string"
+                      ? imageFile
+                      : URL.createObjectURL(imageFile)
+                    : ""
+                }
+                alt="User Avatar"
+                sx={{ width: 80, height: 80 }}
               />
             </Box>
+            <Box>
+              <Typography variant="h3">{vendor?.businessname}</Typography>
+              <Chip
+                label={vendor?.status}
+                color={vendor?.status === "Approved" ? "success" : "warning"}
+                variant="filled"
+                size="small"
+              />
+            </Box>
+          </Box>
+          <Box>
+            <Typography variant="h6" gutterBottom fontWeight={600}>
+              Business Information
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
 
             <Box
               sx={{
                 display: "flex",
+                flexDirection: "column",
                 gap: 2,
               }}
             >
+              <Box>
+                <TextField
+                  fullWidth
+                  label="Business Name"
+                  name="businessname"
+                  value={formData.businessname}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box
+                sx={{
+                  display: "flex",
+                  gap: 2,
+                }}
+              >
+                <TextField
+                  fullWidth
+                  label="Business Email"
+                  name="businessemail"
+                  value={formData.businessemail}
+                  disabled
+                />
+
+                <TextField
+                  type="number"
+                  fullWidth
+                  label="Business Number"
+                  name="businessnumber"
+                  value={formData.businessnumber}
+                  onChange={handleChange}
+                />
+              </Box>
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h6" gutterBottom fontWeight={600}>
+              Business Address
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
               <TextField
                 fullWidth
-                label="Business Email"
-                name="businessemail"
-                value={formData.businessemail}
-                disabled
+                label="Address"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
               />
 
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  fullWidth
+                  label="City"
+                  name="city"
+                  value={formData.city}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  label="State"
+                  name="state"
+                  value={formData.state}
+                  onChange={handleChange}
+                />
+              </Box>
+
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  fullWidth
+                  label="Pincode"
+                  name="pincode"
+                  value={formData.pincode}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  label="Country"
+                  name="country"
+                  value={formData.country}
+                  onChange={handleChange}
+                />
+              </Box>
+            </Box>
+          </Box>
+
+          <Box>
+            <Typography variant="h6" gutterBottom fontWeight={600}>
+              Owner Information
+            </Typography>
+            <Divider sx={{ mb: 2 }} />
+
+            <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
+                <TextField
+                  fullWidth
+                  label="Full Name"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                />
+                <TextField
+                  fullWidth
+                  label="Email"
+                  name="email"
+                  value={formData.email}
+                  disabled
+                />
+              </Box>
+
               <TextField
-                type="number"
                 fullWidth
-                label="Business Number"
-                name="businessnumber"
-                value={formData.businessnumber}
+                label="Phone Number"
+                name="number"
+                value={formData.number}
                 onChange={handleChange}
               />
             </Box>
           </Box>
+
+          {vendor ? (
+            <Box textAlign="left" sx={{ mt: 3 }}>
+              <Button variant="contained" size="large" onClick={handleSubmit}>
+                Save Changes
+              </Button>
+            </Box>
+          ) : (
+            <></>
+          )}
         </Box>
-
-        <Box>
-          <Typography variant="h6" gutterBottom fontWeight={600}>
-            Business Address
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <TextField
-              fullWidth
-              label="Address"
-              name="address"
-              value={formData.address}
-              onChange={handleChange}
-            />
-
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                fullWidth
-                label="City"
-                name="city"
-                value={formData.city}
-                onChange={handleChange}
-              />
-              <TextField
-                fullWidth
-                label="State"
-                name="state"
-                value={formData.state}
-                onChange={handleChange}
-              />
-            </Box>
-
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                fullWidth
-                label="Pincode"
-                name="pincode"
-                value={formData.pincode}
-                onChange={handleChange}
-              />
-              <TextField
-                fullWidth
-                label="Country"
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-              />
-            </Box>
-          </Box>
-        </Box>
-
-        <Box>
-          <Typography variant="h6" gutterBottom fontWeight={600}>
-            Owner Information
-          </Typography>
-          <Divider sx={{ mb: 2 }} />
-
-          <Box sx={{ display: "flex", flexDirection: "column", gap: 2 }}>
-            <Box sx={{ display: "flex", gap: 2 }}>
-              <TextField
-                fullWidth
-                label="Full Name"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-              />
-              <TextField
-                fullWidth
-                label="Email"
-                name="email"
-                value={formData.email}
-                disabled
-              />
-            </Box>
-
-            <TextField
-              fullWidth
-              label="Phone Number"
-              name="number"
-              value={formData.number}
-              onChange={handleChange}
-            />
-          </Box>
-        </Box>
-
-        {vendor ? (
-          <Box textAlign="left" sx={{ mt: 3 }}>
-            <Button variant="contained" size="large" onClick={handleSubmit}>
-              Save Changes
-            </Button>
-          </Box>
-        ) : (
-          <></>
-        )}
-      </Box>
+      )}
     </Container>
   );
 }

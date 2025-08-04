@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const VendorDetails = require("../models/vendorDetails");
+const Product = require("../models/product");
 const addVendorDetails = async (req, res) => {
   try {
     const id = req.user.id;
@@ -114,9 +115,31 @@ const updateVendorDetails = async (req, res) => {
     res.status(500).json({ status: 500, msg: "ProfileUpdate Failed" });
   }
 };
+const getAllVendorProducts = async (req, res) => {
+  try {
+    const id = req.user.id;
+    const findVendor = await VendorDetails.findOne({ createdBy: id });
+    const vendorProducts = await Product.find({
+      addedBy: findVendor._id,
+    }).populate("addedBy");
+    console.log(vendorProducts);
+
+    return res.status(201).json({
+      status: 201,
+      msg: "vendorproduct fetch successfully",
+      vendorProducts,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      status: false,
+      msg: "vendorproduct add failed",
+    });
+  }
+};
 
 module.exports = {
   addVendorDetails,
   getVendorDetails,
   updateVendorDetails,
+  getAllVendorProducts,
 };

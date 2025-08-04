@@ -1,8 +1,10 @@
 const { default: mongoose } = require("mongoose");
 const Product = require("../models/product");
+const VendorDetails = require("../models/vendorDetails");
 
 const createProduct = async (req, res) => {
   try {
+    const id = req.user.id;
     const { name, price, description, stock, size, color, productType } =
       req.body;
     if (!name || !price || !stock || !size || !color) {
@@ -15,7 +17,9 @@ const createProduct = async (req, res) => {
     } else {
       image = req.file.path;
     }
+    const findUser = await VendorDetails.findOne({ createdBy: id });
     const newProduct = new Product({
+      addedBy: findUser._id,
       name,
       price,
       description,
@@ -70,6 +74,22 @@ const getAllproducts = async (req, res) => {
         as: "ratings",
       },
     });
+    pipeline.push(
+      {
+        $lookup: {
+          from: "vendordetails",
+          localField: "addedBy",
+          foreignField: "_id",
+          as: "addedBy",
+        },
+      },
+      {
+        $unwind: {
+          path: "$addedBy",
+          preserveNullAndEmptyArrays: true,
+        },
+      }
+    );
 
     if (userId) {
       pipeline.push({
@@ -120,6 +140,7 @@ const getAllproducts = async (req, res) => {
 
     const products = await Product.aggregate(pipeline);
     const total = await Product.countDocuments(match);
+    console.log(products);
 
     return res.status(200).json({
       status: 200,

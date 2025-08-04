@@ -3,6 +3,7 @@ import { openSnackbar } from "../redux/snackBarSlice";
 import {
   addVendorDetailsAPI,
   getVendorDetailsAPI,
+  getVendorProductsAPI,
   updateVendorDetailsAPI,
 } from "../apis/vendorAPI";
 
@@ -48,6 +49,18 @@ export const updateVendorDetailsData = createAsyncThunk(
           severity: "success",
         })
       );
+      return response;
+    } catch (error) {
+      return error.response?.data || "Failed to get vendor details";
+    }
+  }
+);
+export const getVendorProductsData = createAsyncThunk(
+  "vendor/getVendorProducts",
+  async () => {
+    try {
+      const response = await getVendorProductsAPI();
+      console.log(response);
       return response;
     } catch (error) {
       return error.response?.data || "Failed to get vendor details";

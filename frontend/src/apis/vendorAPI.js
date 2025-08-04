@@ -15,3 +15,8 @@ export const updateVendorDetailsAPI = async (values) => {
   console.log(response);
   return response.data;
 };
+export const getVendorProductsAPI = async () => {
+  const response = await api.get(`vendor/getVendorProducts`);
+  console.log(response);
+  return response.data;
+};
