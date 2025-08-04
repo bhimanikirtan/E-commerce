@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 
 const productSchema = new mongoose.Schema({
+  addedBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "VendorDetails",
+    default: null,
+  },
   name: String,
   image: String,
   price: Number,

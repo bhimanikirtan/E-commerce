@@ -11,14 +11,11 @@ import {
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { useDispatch } from "react-redux";
-import { useEffect } from "react";
-import { useTranslation } from "react-i18next";
 import { addVendorDetailsData } from "../Thunk/vendorThunk";
 import { useState } from "react";
 
-function AddVendorDetails({ open, onClose, editData, editAddMode }) {
+function AddVendorDetails({ open, onClose }) {
   const dispatch = useDispatch();
-  const { t } = useTranslation();
   const [imageFile, setImageFile] = useState(null);
   const validationSchema = yup.object({
     businessname: yup.string().required("businessname is required"),
@@ -79,24 +76,11 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
   const handleFileChange = (e) => {
     setImageFile(e.target.files[0]);
   };
-  useEffect(() => {
-    if (editAddMode && editData) {
-      formik.setValues({
-        address: editData.address || "",
-        city: editData.city || "",
-        pincode: editData.pincode || "",
-        country: editData.country || "",
-        state: editData.state || "",
-      });
-    }
-  }, [editAddMode, editData]);
   return (
     <>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>
-          <Typography variant="h4">
-            {editAddMode ? t("Update Vendor Detail") : t("Add Vendor Detail")}
-          </Typography>
+          <Typography variant="h4">Add Vendor Detail</Typography>
         </DialogTitle>
         <DialogContent>
           <form onSubmit={formik.handleSubmit}>
@@ -109,7 +93,6 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
               }}
             >
               <Box display="flex" alignItems="center" gap={2}>
-                {/* Avatar Preview */}
                 <Avatar
                   src={
                     imageFile
@@ -121,12 +104,10 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                   alt="Company Logo"
                   sx={{ width: 56, height: 56 }}
                 />
-
-                {/* Upload Button */}
                 <Button variant="outlined" component="label">
                   {formik.values.companylogo
                     ? formik.values.companylogo.name
-                    : t("Upload Company Logo")}
+                    : "Upload Company Logo"}
                   <input
                     type="file"
                     accept="image/*"
@@ -137,7 +118,6 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                 </Button>
               </Box>
 
-              {/* Error Message */}
               {formik.touched.companylogo && formik.errors.companylogo && (
                 <Typography color="error" variant="body2" mt={1}>
                   {formik.errors.companylogo}
@@ -145,7 +125,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
               )}
               <Box>
                 <TextField
-                  label={t("businessname")}
+                  label="Businessname"
                   name="businessname"
                   value={formik.values.businessname}
                   onChange={formik.handleChange}
@@ -162,7 +142,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
 
               <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
                 <TextField
-                  label={t("businessemail")}
+                  label="Businessemail"
                   name="businessemail"
                   value={formik.values.businessemail}
                   onChange={formik.handleChange}
@@ -176,7 +156,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                   fullWidth
                 />
                 <TextField
-                  label={t("businessnumber")}
+                  label="Businessnumber"
                   name="businessnumber"
                   type="number"
                   value={formik.values.businessnumber}
@@ -195,7 +175,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
 
               <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
                 <TextField
-                  label={t("address")}
+                  label="Address"
                   name="address"
                   value={formik.values.address}
                   onChange={formik.handleChange}
@@ -206,7 +186,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                   fullWidth
                 />
                 <TextField
-                  label={t("city")}
+                  label="City"
                   name="city"
                   value={formik.values.city}
                   onChange={formik.handleChange}
@@ -218,7 +198,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
 
               <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
                 <TextField
-                  label={t("state")}
+                  label="State"
                   name="state"
                   value={formik.values.state}
                   onChange={formik.handleChange}
@@ -227,7 +207,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                   fullWidth
                 />
                 <TextField
-                  label={t("pincode")}
+                  label="Pincode"
                   name="pincode"
                   value={formik.values.pincode}
                   onChange={formik.handleChange}
@@ -241,7 +221,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
 
               <Box sx={{ width: "100%", display: "flex", gap: 3 }}>
                 <TextField
-                  label={t("country")}
+                  label="Country"
                   name="country"
                   value={formik.values.country}
                   onChange={formik.handleChange}
@@ -265,7 +245,7 @@ function AddVendorDetails({ open, onClose, editData, editAddMode }) {
                   type="submit"
                   disabled={formik.isSubmitting}
                 >
-                  {editAddMode ? t("Update") : t("Add")}
+                  Add
                 </Button>
               </Box>
             </Box>

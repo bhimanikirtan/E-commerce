@@ -6,6 +6,7 @@ const {
   addVendorDetails,
   getVendorDetails,
   updateVendorDetails,
+  getAllVendorProducts,
 } = require("../controllers/vendorController");
 
 router.post(
@@ -23,5 +24,6 @@ router.put(
   checkBlockUser,
   updateVendorDetails
 );
+router.get("/getVendorProducts", verifyToken, getAllVendorProducts);
 
 module.exports = router;

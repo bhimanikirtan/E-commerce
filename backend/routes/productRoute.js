@@ -13,7 +13,7 @@ const {
 } = require("../controllers/productController");
 const { verifyToken } = require("../middleware/auth");
 
-router.post("/", upload.single("image"), createProduct);
+router.post("/", upload.single("image"), verifyToken, createProduct);
 router.post("/getAllProduct", verifyToken, getAllproducts);
 router.get("/new", getNewArrivalproducts);
 router.get("/top", getTopSellingproducts);
