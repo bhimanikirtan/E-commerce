@@ -33,7 +33,9 @@ function Cart() {
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down("sm", "ssm", "xs"));
   const { cartData } = useSelector((state) => state.cart);
-  const total = useSelector((state) => state.cart.total);
+  console.log(cartData, "+++++++++++++++++++");
+
+  // const total = useSelector((state) => state.cart.total);
   useEffect(() => {
     dispatch(getAllCartData());
   }, [dispatch]);
@@ -88,7 +90,7 @@ function Cart() {
             gap: 3,
           }}
         >
-          {cartData?.length === 0 ? (
+          {cartData?.products?.length === 0 ? (
             <Typography
               variant="h4"
               sx={{
@@ -110,108 +112,127 @@ function Cart() {
               }}
             >
               <>
-                {cartData.map((product) => {
+                {cartData?.products?.map((item) => {
                   return (
                     <>
                       <Box
                         sx={{ width: "100%", display: "flex", gap: 2 }}
-                        key={product.productId._id}
+                        key={item._id}
                       >
-                        <Box sx={{ width: { xs: "30%" } }}>
-                          <img
-                            style={{
-                              width: "100%",
-                            }}
-                            src={`http://192.168.2.222:5000/${product.productId.image}`}
-                            alt=" "
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              width: "auto",
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: { sm: 2, md: 2, xl: 2 },
-                            }}
-                          >
-                            <Typography variant={isMobile ? "body1" : "h4"}>
-                              {product.productId.name}
-                            </Typography>
-                            <Typography variant="body2">
-                              Size: {product.size}
-                            </Typography>
-                            <Typography variant="body2">
-                              Color: {product.color}
-                            </Typography>
-                            <Typography variant={isMobile ? "body2" : "h5"}>
-                              ${product.productId.price} x {product.quantity}
-                            </Typography>
+                        <>
+                          <Box sx={{ width: { xs: "30%" } }}>
+                            <img
+                              style={{
+                                width: "100%",
+                              }}
+                              src={`http://192.168.2.222:5000/${item.productId.image}`}
+                              alt=" "
+                            />
                           </Box>
                           <Box
                             sx={{
-                              width: "auto",
+                              width: "100%",
                               display: "flex",
-                              flexWrap: "wrap",
-                              justifyContent: "flex-end",
-                              alignItems: "end",
-                              position: "relative",
+                              flexDirection: "row",
+                              justifyContent: "space-between",
                             }}
                           >
-                            <Button
-                              onClick={() => {
-                                dispatch(removeFromCartData(product._id));
-                              }}
-                              sx={{ position: "absolute", top: 0, right: 0 }}
-                            >
-                              <DeleteIcon color="error" />
-                            </Button>
                             <Box
                               sx={{
                                 width: "auto",
                                 display: "flex",
-                                flexDirection: "row",
-                                alignItems: "center",
-                                backgroundColor: "#f0f0f0",
-                                borderRadius: "62px",
-                                justifyContent: "space-between",
-                                p: { xs: 0, sm: 1, md: 1, xl: 1 },
+                                flexDirection: "column",
+                                gap: { sm: 2, md: 2, xl: 2 },
                               }}
                             >
-                              <IconButton
-                                onClick={() => {
-                                  dispatch(minusData(product._id));
-                                }}
-                                size="small"
-                              >
-                                <RemoveIcon sx={{ color: "#000000" }} />
-                              </IconButton>
-
-                              <Typography
-                                sx={{ color: "#000000" }}
-                                variant={isMobile ? "body2" : "body1"}
-                              >
-                                {product.quantity}
+                              <Typography variant={isMobile ? "body1" : "h4"}>
+                                {item.productId.name}{" "}
+                                <Typography
+                                  variant=""
+                                  color="success"
+                                  sx={{
+                                    fontSize: "24px",
+                                    fontWeight: 600,
+                                  }}
+                                >
+                                  {item?.productId?.addedBy?.businessname}
+                                  {item?.productId?.addedBy?.businessname
+                                    ? " Product"
+                                    : ""}
+                                </Typography>
                               </Typography>
-
-                              <IconButton
+                              <Typography variant="body2">
+                                Size: {item.size}
+                              </Typography>
+                              <Typography variant="body2">
+                                Color: {item.color}
+                              </Typography>
+                              <Typography variant={isMobile ? "body2" : "h5"}>
+                                ${item.productId.price} x {item.quantity}
+                              </Typography>
+                            </Box>
+                            <Box
+                              sx={{
+                                width: "auto",
+                                display: "flex",
+                                flexWrap: "wrap",
+                                justifyContent: "flex-end",
+                                alignItems: "end",
+                                position: "relative",
+                              }}
+                            >
+                              <Button
                                 onClick={() => {
-                                  dispatch(plusData(product._id));
+                                  dispatch(removeFromCartData(item._id));
                                 }}
-                                size="small"
+                                sx={{
+                                  position: "absolute",
+                                  top: 0,
+                                  right: 0,
+                                }}
                               >
-                                <AddIcon sx={{ color: "#000000" }} />
-                              </IconButton>
+                                <DeleteIcon color="error" />
+                              </Button>
+                              <Box
+                                sx={{
+                                  width: "auto",
+                                  display: "flex",
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  backgroundColor: "#f0f0f0",
+                                  borderRadius: "62px",
+                                  justifyContent: "space-between",
+                                  p: { xs: 0, sm: 1, md: 1, xl: 1 },
+                                }}
+                              >
+                                <IconButton
+                                  onClick={() => {
+                                    dispatch(minusData(item._id));
+                                  }}
+                                  size="small"
+                                >
+                                  <RemoveIcon sx={{ color: "#000000" }} />
+                                </IconButton>
+
+                                <Typography
+                                  sx={{ color: "#000000" }}
+                                  variant={isMobile ? "body2" : "body1"}
+                                >
+                                  {item.quantity}
+                                </Typography>
+
+                                <IconButton
+                                  onClick={() => {
+                                    dispatch(plusData(item._id));
+                                  }}
+                                  size="small"
+                                >
+                                  <AddIcon sx={{ color: "#000000" }} />
+                                </IconButton>
+                              </Box>
                             </Box>
                           </Box>
-                        </Box>
+                        </>
                       </Box>
                     </>
                   );
@@ -219,7 +240,7 @@ function Cart() {
               </>
             </Box>
           )}
-          {cartData?.length === 0 ? (
+          {cartData?.products?.length === 0 ? (
             <></>
           ) : (
             <Box
@@ -259,7 +280,7 @@ function Cart() {
                     {t("Subtotal")}
                   </Typography>
                   <Typography variant={isMobile ? "h6" : "h5"}>
-                    ${total}
+                    ${cartData.total}
                   </Typography>
                 </Box>
                 <Box
@@ -294,7 +315,7 @@ function Cart() {
                     {t("Total")}
                   </Typography>
                   <Typography variant={isMobile ? "h5" : "h4"}>
-                    ${total}
+                    ${cartData.total}
                   </Typography>
                 </Box>
                 <Box
@@ -354,7 +375,7 @@ function Cart() {
                 >
                   <Button
                     onClick={() => {
-                      if (cartData == "") {
+                      if (cartData.products == "") {
                         dispatch(
                           openSnackbar({
                             massage: "The cart is empty",

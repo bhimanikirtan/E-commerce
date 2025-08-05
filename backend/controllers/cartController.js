@@ -1,6 +1,8 @@
 const Cart = require("../models/cart");
 const User = require("../models/user");
 const Product = require("../models/product");
+const Vendordetails = require("../models/vendorDetails");
+const { default: mongoose } = require("mongoose");
 
 const createCart = async (req, res) => {
   try {
@@ -71,20 +73,39 @@ const createCart = async (req, res) => {
       .json({ status: false, message: "Add to cart failed" });
   }
 };
-
 const getAllCart = async (req, res) => {
   try {
-    const id = req.user.id;
-    const cartItems = await Cart.findOne({ userId: id }).populate(
-      "products.productId"
-    );
+    const userId = req.user.id;
 
-    return res
-      .status(200)
-      .json({ status: 200, msg: "fetch all cart", cartItems });
+    const cartItems = await Cart.findOne({ userId })
+      .populate({
+        path: "products.productId",
+        populate: {
+          path: "addedBy",
+          model: "VendorDetails",
+        },
+      })
+      .lean();
+    console.log(cartItems);
+    if (!cartItems) {
+      return res.status(404).json({
+        status: 404,
+        msg: "Cart not found",
+      });
+    }
+
+    return res.status(200).json({
+      status: 200,
+      msg: "Cart fetched successfully",
+      cartItems,
+    });
   } catch (error) {
-    console.error("error to fetch product", error);
-    return res.status(500).json({ status: 500, msg: "error to fetch product" });
+    console.error("Error fetching cart:", error);
+    return res.status(500).json({
+      status: 500,
+      msg: "Internal server error",
+      error: error.message,
+    });
   }
 };
 

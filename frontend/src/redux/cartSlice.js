@@ -27,7 +27,7 @@ const cartSlice = createSlice({
       })
       .addCase(addToCartData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cart.products;
+        state.cartData.products = action.payload.cart.products;
       })
       .addCase(addToCartData.rejected, (state, action) => {
         state.loading = false;
@@ -42,9 +42,8 @@ const cartSlice = createSlice({
       })
       .addCase(getAllCartData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cartItems.products;
-        state.total = action.payload.cartItems.total;
-        state.cartItems = action.payload.cartItems;
+        console.log(action.payload);
+        state.cartData = action.payload.cartItems;
       })
       .addCase(getAllCartData.rejected, (state, action) => {
         state.loading = false;
@@ -59,8 +58,8 @@ const cartSlice = createSlice({
       })
       .addCase(removeFromCartData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cart.products;
-        state.total = action.payload.cart.total;
+        state.cartData.products = action.payload.cart.products;
+        state.cartData.total = action.payload.cart.total;
       })
       .addCase(removeFromCartData.rejected, (state, action) => {
         state.loading = false;
@@ -75,8 +74,8 @@ const cartSlice = createSlice({
       })
       .addCase(clearCartData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cart.products;
-        state.total = action.payload.cart.total;
+        state.cartData.products = action.payload.cart.products;
+        state.cartData.total = action.payload.cart.total;
       })
       .addCase(clearCartData.rejected, (state, action) => {
         state.loading = false;
@@ -91,8 +90,8 @@ const cartSlice = createSlice({
       })
       .addCase(plusData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cart.products;
-        state.total = action.payload.cart.total;
+        state.cartData.products = action.payload.cart.products;
+        state.cartData.total = action.payload.cart.total;
       })
       .addCase(plusData.rejected, (state, action) => {
         state.loading = false;
@@ -107,8 +106,8 @@ const cartSlice = createSlice({
       })
       .addCase(minusData.fulfilled, (state, action) => {
         state.loading = false;
-        state.cartData = action.payload.cart.products;
-        state.total = action.payload.cart.total;
+        state.cartData.products = action.payload.cart.products;
+        state.cartData.total = action.payload.cart.total;
       })
       .addCase(minusData.rejected, (state, action) => {
         state.loading = false;

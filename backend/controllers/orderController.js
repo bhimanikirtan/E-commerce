@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Cart = require("../models/cart");
 const Order = require("../models/order");
+const VendorDetails = require("../models/vendorDetails");
 const nodemailer = require("nodemailer");
 
 const addOrder = async (req, res) => {
@@ -42,6 +43,9 @@ const addOrder = async (req, res) => {
     });
 
     await newOrder.save();
+    cart.products = [];
+    cart.total = 0;
+    await cart.save();
 
     return res.status(201).json({
       status: true,
@@ -78,6 +82,64 @@ const getAllOrders = async (req, res) => {
     });
   }
 };
+const getVendorOrders = async (req, res) => {
+  try {
+    const { status } = req.query;
+    const vendorId = req.user.id;
+    const findVendor = await VendorDetails.findOne({
+      createdBy: vendorId,
+    }).populate("createdBy");
+    const orders = await Order.find()
+      .populate({
+        path: "orderData.products.productId",
+        populate: {
+          path: "addedBy",
+          model: "VendorDetails",
+        },
+      })
+      .populate("userId");
+    let filteredOrders = orders
+      .map((order) => {
+        const vendorProducts = order.orderData.products.filter((p) => {
+          return (
+            p.productId?.addedBy?._id?.toString() === findVendor._id.toString()
+          );
+        });
+
+        if (vendorProducts.length === 0) return null;
+
+        const productTotal = vendorProducts.reduce((sum, p) => {
+          return sum + (p.productId?.price || 0) * p.quantity;
+        }, 0);
+
+        return {
+          ...order.toObject(),
+          total: productTotal,
+          orderData: {
+            products: vendorProducts,
+          },
+        };
+      })
+      .filter((order) => order !== null);
+    if (status) {
+      filteredOrders = filteredOrders.filter(
+        (order) => order.status === status
+      );
+    }
+    return res.status(200).json({
+      status: true,
+      filteredOrders,
+    });
+  } catch (error) {
+    console.error("Error fetching vendor orders:", error);
+    return res.status(500).json({
+      status: false,
+      msg: "Server error",
+      error: error.message,
+    });
+  }
+};
+
 const cancelOrder = async (req, res) => {
   try {
     const orderId = req.params.id;
@@ -174,4 +236,5 @@ module.exports = {
   addOrder,
   getAllOrders,
   cancelOrder,
+  getVendorOrders,
 };
