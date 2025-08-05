@@ -19,7 +19,6 @@ const createProduct = async (req, res) => {
     }
     const findUser = await VendorDetails.findOne({ createdBy: id });
     const newProduct = new Product({
-      addedBy: findUser._id,
       name,
       price,
       description,
@@ -29,6 +28,10 @@ const createProduct = async (req, res) => {
       color,
       productType,
     });
+    if (req.user.role === "vendor") {
+      newProduct.addedBy = findUser._id;
+      newProduct.productStatus = "pending";
+    }
     await newProduct.save();
     const AllProduct = await Product.find({});
     return res.status(201).json({
@@ -75,6 +78,11 @@ const getAllproducts = async (req, res) => {
       },
     });
     pipeline.push(
+      // {
+      //   $match: {
+      //     productStatus: "Approved",
+      //   },
+      // },
       {
         $lookup: {
           from: "vendordetails",
@@ -140,7 +148,6 @@ const getAllproducts = async (req, res) => {
 
     const products = await Product.aggregate(pipeline);
     const total = await Product.countDocuments(match);
-    console.log(products);
 
     return res.status(200).json({
       status: 200,

@@ -247,17 +247,7 @@ const getAnalyticsData = async (req, res) => {
     res.status(500).json({ error: "Failed to get analytics data" });
   }
 };
-const getAllvendor = async (req, res) => {
-  try {
-    const allVendor = await VendorDetails.find({});
-    return res
-      .status(200)
-      .json({ status: 200, msg: "fetch all vendors", allVendor });
-  } catch (error) {
-    console.error("error to fetch vendors", error);
-    return res.status(500).json({ status: 500, msg: "error to fetch vendors" });
-  }
-};
+
 const updateVendorstatus = async (req, res) => {
   try {
     const vendorId = req.params.id;
@@ -276,6 +266,66 @@ const updateVendorstatus = async (req, res) => {
       .json({ status: 500, msg: "error to update vendors" });
   }
 };
+const updateVendorProductstatus = async (req, res) => {
+  try {
+    const vendorProductId = req.params.id;
+    const updateProductVendor = await Product.findByIdAndUpdate(
+      vendorProductId,
+      { productStatus: "Approved" },
+      { new: true }
+    );
+    return res.status(200).json({
+      status: 200,
+      msg: "vendor Productstatus update",
+      updateProductVendor,
+    });
+  } catch (error) {
+    console.error("error to fetch vendors", error);
+    return res
+      .status(500)
+      .json({ status: 500, msg: "error to update vendor ProductStatus" });
+  }
+};
+const getAllVendorsWithProducts = async (req, res) => {
+  try {
+    const result = await VendorDetails.aggregate([
+      {
+        $lookup: {
+          from: "products",
+          localField: "_id",
+          foreignField: "addedBy",
+          as: "products",
+        },
+      },
+      {
+        $lookup: {
+          from: "users",
+          localField: "createdBy",
+          foreignField: "_id",
+          as: "createdByInfo",
+        },
+      },
+      {
+        $unwind: {
+          path: "$createdByInfo",
+          preserveNullAndEmptyArrays: true,
+        },
+      },
+    ]);
+
+    return res.status(200).json({
+      status: 200,
+      msg: "Fetched all vendors with their products",
+      vendors: result,
+    });
+  } catch (error) {
+    console.error("Error during aggregation:", error);
+    return res.status(500).json({
+      status: 500,
+      msg: "Error fetching vendors with products",
+    });
+  }
+};
 
 module.exports = {
   getAllOrdersAdmin,
@@ -285,6 +335,7 @@ module.exports = {
   getAllCount,
   blockUser,
   getAnalyticsData,
-  getAllvendor,
   updateVendorstatus,
+  getAllVendorsWithProducts,
+  updateVendorProductstatus,
 };

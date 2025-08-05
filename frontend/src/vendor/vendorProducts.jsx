@@ -495,6 +495,7 @@ function VendorProducts() {
                       <TableCell>Stock</TableCell>
                       <TableCell>Size</TableCell>
                       <TableCell>colors</TableCell>
+                      <TableCell>Status</TableCell>
                       <TableCell align="center">Edit/Delete</TableCell>
                     </TableRow>
                   </TableHead>
@@ -563,6 +564,19 @@ function VendorProducts() {
                                 ></Box>
                               ))}
                             </Box>
+                          </TableCell>
+                          <TableCell>
+                            {" "}
+                            <Chip
+                              label={prod?.productStatus}
+                              color={
+                                prod?.productStatus === "Approved"
+                                  ? "success"
+                                  : "warning"
+                              }
+                              variant="filled"
+                              size="small"
+                            />
                           </TableCell>
                           <TableCell align="center">
                             <Box

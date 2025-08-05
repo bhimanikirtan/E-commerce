@@ -72,6 +72,11 @@ function ManageProducts() {
   const dispatch = useDispatch();
   const loaderRef = useRef(null);
   const { products, total } = useSelector((state) => state.products);
+  const selectProduct = products.filter(
+    (p) => p.productStatus == "Approved" || p.productStatus == null
+  );
+  console.log(selectProduct, "*****************");
+
   const [open, setOpen] = useState(false);
   const [imageFile, setImageFile] = useState(null);
   const [editMode, setEditmode] = useState(false);
@@ -487,6 +492,7 @@ function ManageProducts() {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
+                    <TableCell>Vendor</TableCell>
                     <TableCell>Image</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Description</TableCell>
@@ -498,99 +504,107 @@ function ManageProducts() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {products?.length === 0 ? (
+                  {selectProduct?.length === 0 ? (
                     <TableRow>
                       <TableCell colSpan={10}>No Product Data Found</TableCell>
                     </TableRow>
                   ) : (
-                    products?.map((prod) => (
-                      <TableRow key={prod._id}>
-                        <TableCell>{prod.name}</TableCell>
-                        <TableCell>
-                          {prod.image && (
-                            <img
-                              src={`http://192.168.2.222:5000/${prod.image}`}
-                              width="60"
-                              height="60"
-                            />
-                          )}
-                        </TableCell>
-                        <TableCell>{prod.price}</TableCell>
-                        <TableCell
-                          style={{
-                            maxWidth: "100px",
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                            whiteSpace: "nowrap",
-                          }}
-                        >
-                          {prod.description}
-                        </TableCell>
-                        <TableCell>{prod.stock}</TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "column",
-                              gap: 1,
+                    selectProduct?.map((prod) => {
+                      return (
+                        <TableRow key={prod._id}>
+                          <TableCell>{prod.name}</TableCell>
+                          <TableCell>
+                            {prod?.addedBy == null
+                              ? "Admin"
+                              : prod?.addedBy?.businessname}
+                          </TableCell>
+
+                          <TableCell>
+                            {prod.image && (
+                              <img
+                                src={`http://192.168.2.222:5000/${prod.image}`}
+                                width="60"
+                                height="60"
+                              />
+                            )}
+                          </TableCell>
+                          <TableCell>{prod.price}</TableCell>
+                          <TableCell
+                            style={{
+                              maxWidth: "100px",
+                              overflow: "hidden",
+                              textOverflow: "ellipsis",
+                              whiteSpace: "nowrap",
                             }}
                           >
-                            {prod.size?.map((name, index) => (
-                              <Chip key={index} label={name} />
-                            ))}
-                          </Box>
-                        </TableCell>
-                        <TableCell>{prod.productType}</TableCell>
-                        <TableCell>
-                          <Box
-                            sx={{
-                              display: "flex",
-                              flexDirection: "row",
-                              gap: 1,
-                            }}
-                          >
-                            {prod.color?.map((color, index) => (
-                              <Box
-                                key={index}
-                                sx={{
-                                  backgroundColor: color,
-                                  borderRadius: "50%",
-                                  width: "30px",
-                                  height: "30px",
+                            {prod.description}
+                          </TableCell>
+                          <TableCell>{prod.stock}</TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "column",
+                                gap: 1,
+                              }}
+                            >
+                              {prod.size?.map((name, index) => (
+                                <Chip key={index} label={name} />
+                              ))}
+                            </Box>
+                          </TableCell>
+                          <TableCell>{prod.productType}</TableCell>
+                          <TableCell>
+                            <Box
+                              sx={{
+                                display: "flex",
+                                flexDirection: "row",
+                                gap: 1,
+                              }}
+                            >
+                              {prod.color?.map((color, index) => (
+                                <Box
+                                  key={index}
+                                  sx={{
+                                    backgroundColor: color,
+                                    borderRadius: "50%",
+                                    width: "30px",
+                                    height: "30px",
+                                  }}
+                                ></Box>
+                              ))}
+                            </Box>
+                          </TableCell>
+                          <TableCell align="center">
+                            <Box
+                              sx={{
+                                width: "100%",
+                                display: "flex",
+                                justifyContent: "center",
+                              }}
+                            >
+                              <Button
+                                onClick={() => {
+                                  handaleOpen();
+                                  setEditmode(true);
+                                  setEditId(prod._id);
+                                  setEditData(prod);
                                 }}
-                              ></Box>
-                            ))}
-                          </Box>
-                        </TableCell>
-                        <TableCell align="center">
-                          <Box
-                            sx={{
-                              width: "100%",
-                              display: "flex",
-                              justifyContent: "center",
-                            }}
-                          >
-                            <Button
-                              onClick={() => {
-                                handaleOpen();
-                                setEditmode(true);
-                                setEditId(prod._id);
-                                setEditData(prod);
-                              }}
-                            >
-                              <EditIcon color="info" />
-                            </Button>
-                            <Button
-                              onClick={() => {
-                                handleDelete(prod._id);
-                              }}
-                            >
-                              <DeleteIcon color="error" />
-                            </Button>
-                          </Box>
-                        </TableCell>
-                      </TableRow>
-                    ))
+                              >
+                                <EditIcon color="info" />
+                              </Button>
+                              <Button
+                                onClick={() => {
+                                  handleDelete(prod._id);
+                                }}
+                              >
+                                <DeleteIcon color="error" />
+                              </Button>
+                            </Box>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
                   )}
                 </TableBody>
               </Table>

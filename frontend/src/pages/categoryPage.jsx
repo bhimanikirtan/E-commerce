@@ -26,6 +26,9 @@ function CategoryPage() {
   const maxmax = 1000;
   const { user } = useSelector((state) => state.auth);
   const { products, total } = useSelector((state) => state.products);
+  const selectProduct = products.filter(
+    (p) => p.productStatus == "Approved" || p.productStatus == null
+  );
   const [priceRangeValue, setPriceRangeValue] = useState([100, 500]);
   const [skip, setSkip] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -262,7 +265,7 @@ function CategoryPage() {
                   gap: 3,
                 }}
               >
-                {products.map((product) => (
+                {selectProduct.map((product) => (
                   <Grid key={product._id || product.id}>
                     <ProductCard product={product} />
                   </Grid>
