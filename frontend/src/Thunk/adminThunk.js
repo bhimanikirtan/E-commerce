@@ -7,8 +7,9 @@ import {
   updateUserByAdminAPI,
   getAllCountByAdminAPI,
   getAnalyticsAPI,
-  getAllvendorsAPI,
   updateVendorstatusAPI,
+  getAllvendorswithProductsAPI,
+  updateVendorProductstatusAPI,
 } from "../apis/adminAPI";
 import { openSnackbar } from "../redux/snackBarSlice";
 
@@ -146,11 +147,11 @@ export const getAnalyticsData = createAsyncThunk(
     }
   }
 );
-export const getAllVendorsData = createAsyncThunk(
-  "admin/getAllVendorsData",
+export const getAllVendorswithProductsData = createAsyncThunk(
+  "admin/getAllVendorswithProductsData",
   async (_, { dispatch }) => {
     try {
-      const response = await getAllvendorsAPI();
+      const response = await getAllvendorswithProductsAPI();
       console.log(response);
       return response;
     } catch (error) {
@@ -172,6 +173,29 @@ export const updateVendorStatusData = createAsyncThunk(
       dispatch(
         openSnackbar({
           massage: `Vendor status Approved Successfully`,
+          severity: "success",
+        })
+      );
+      return response;
+    } catch (error) {
+      dispatch(
+        openSnackbar({
+          massage: error?.response?.data?.msg || "Get Analytics failed",
+          severity: "error",
+        })
+      );
+    }
+  }
+);
+export const updateVendorProductStatusData = createAsyncThunk(
+  "admin/updateVendorProductStatusData",
+  async (id, { dispatch }) => {
+    try {
+      const response = await updateVendorProductstatusAPI(id);
+      console.log(response);
+      dispatch(
+        openSnackbar({
+          massage: `Vendor ProductStatus Approved Successfully`,
           severity: "success",
         })
       );

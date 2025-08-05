@@ -18,6 +18,11 @@ const productSchema = new mongoose.Schema({
     enum: ["", "newArrival", "topSelling"],
     default: "",
   },
+  productStatus: {
+    type: String,
+    enum: ["pending", "Approved"],
+    default: null,
+  },
 });
 
 module.exports = mongoose.model("Product", productSchema);

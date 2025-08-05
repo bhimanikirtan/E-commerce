@@ -6,6 +6,7 @@ import {
   People as UsersIcon,
   Logout as LogoutIcon,
 } from "@mui/icons-material";
+import HowToRegIcon from '@mui/icons-material/HowToReg';
 import SendIcon from "@mui/icons-material/Send";
 import admin from "../assets/admin.png";
 
@@ -41,7 +42,7 @@ function Layout() {
     {
       label: "Vendors",
       path: "/admin/manageVendors",
-      icon: <SendIcon />,
+      icon: <HowToRegIcon />,
     },
   ];
 

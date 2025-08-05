@@ -7,8 +7,9 @@ import {
   updateUserByAdminData,
   getAllCountByAdminData,
   getAnalyticsData,
-  getAllVendorsData,
   updateVendorStatusData,
+  getAllVendorswithProductsData,
+  updateVendorProductStatusData,
 } from "../Thunk/adminThunk";
 
 const initialState = {
@@ -139,15 +140,15 @@ const adminSlice = createSlice({
 
       /*************************************getAllVendorsData**************************/
 
-      .addCase(getAllVendorsData.pending, (state) => {
+      .addCase(getAllVendorswithProductsData.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getAllVendorsData.fulfilled, (state, action) => {
+      .addCase(getAllVendorswithProductsData.fulfilled, (state, action) => {
         state.loading = false;
-        state.allVendors = action.payload.allVendor;
+        state.allVendors = action.payload.vendors;
       })
-      .addCase(getAllVendorsData.rejected, (state, action) => {
+      .addCase(getAllVendorswithProductsData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error fetching Products";
       })
@@ -163,6 +164,21 @@ const adminSlice = createSlice({
         // state.allVendors = action.payload.allVendor;
       })
       .addCase(updateVendorStatusData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Error fetching Products";
+      })
+
+      /*************************************updateVendorProductstatusData**************************/
+
+      .addCase(updateVendorProductStatusData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(updateVendorProductStatusData.fulfilled, (state) => {
+        state.loading = false;
+        // state.allVendors = action.payload.allVendor;
+      })
+      .addCase(updateVendorProductStatusData.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload || "Error fetching Products";
       });

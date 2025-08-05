@@ -59,7 +59,7 @@ const ProductCard = ({ product }) => {
         position: "relative",
         display: "flex",
         flexDirection: "column",
-        height: "450px",
+        height: "480px",
         transition: "all 0.3s ease-in-out",
         "&:hover .addToCartBtn": {
           opacity: 1,
@@ -126,6 +126,14 @@ const ProductCard = ({ product }) => {
               </>
             )}
           </Box>
+        </Typography>
+        <Typography
+          variant=""
+          sx={{ fontWeight: 600, fontSize: "24px" }}
+          color="error"
+        >
+          {product?.addedBy?.businessname}
+          {product?.addedBy?.businessname ? " Product" : ""}
         </Typography>
         <Typography variant="h5">
           {t("$")}

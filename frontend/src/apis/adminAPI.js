@@ -29,11 +29,15 @@ export const updateOrderAdminAPI = async (id) => {
   const response = await api.put(`admin/updateOrder/${id}`);
   return response.data;
 };
-export const getAllvendorsAPI = async () => {
-  const response = await api.get(`admin/getAllvendors`);
+export const getAllvendorswithProductsAPI = async () => {
+  const response = await api.get(`admin/getAllvendorswithProducts`);
   return response.data;
 };
 export const updateVendorstatusAPI = async (id) => {
   const response = await api.put(`admin/updateVendorStatus/${id}`);
+  return response.data;
+};
+export const updateVendorProductstatusAPI = async (id) => {
+  const response = await api.put(`admin/updateVendorProductStatus/${id}`);
   return response.data;
 };
