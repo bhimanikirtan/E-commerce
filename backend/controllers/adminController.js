@@ -9,17 +9,45 @@ const getAllOrdersAdmin = async (req, res) => {
     const { status } = req.query;
     const query = status ? { status } : {};
 
-    const orders = await Order.find(query).populate(
-      "orderData.products.productId userId"
-    );
+    const orders = await Order.find(query)
+      .populate([
+        {
+          path: "orderData.products.productId",
+        },
+      ])
+      .populate("userId");
+    const filteredOrders = orders
+      .map((order) => {
+        const filteredProducts = order.orderData.products.filter(
+          (p) => !p.productId?.addedBy
+        );
+
+        const totalPrice = filteredProducts.reduce((sum, p) => {
+          return sum + (p.productId?.price || 0) * p.quantity;
+        }, 0);
+
+        if (filteredProducts.length > 0) {
+          return {
+            ...order._doc,
+            orderData: {
+              ...order.orderData,
+              products: filteredProducts,
+            },
+            total: totalPrice,
+          };
+        }
+
+        return null;
+      })
+      .filter((o) => o !== null);
 
     return res.status(200).json({
       status: true,
-      message: "Orders fetched successfully",
-      orders,
+      message: "Orders with addedBy:null products fetched",
+      orders: filteredOrders,
     });
   } catch (error) {
-    console.error("Error fetching orders:", error);
+    console.error("Error fetching filtered orders:", error);
     return res.status(500).json({
       status: false,
       msg: "Failed to fetch orders",
@@ -48,7 +76,6 @@ const updateOrdersAdmin = async (req, res) => {
       })
       .join("");
 
-    // ✅ Only run if pending === true (means we are delivering now)
     if (pending) {
       const updateOrder = await Order.findByIdAndUpdate(
         orderId,

@@ -42,7 +42,7 @@ function CheckOut() {
   const [checked, setChecked] = useState(false);
   const [loading, setLoading] = useState(false);
 
-  const { cartData, total } = useSelector((state) => state.cart);
+  const { cartData } = useSelector((state) => state.cart);
   const { user, address } = useSelector((state) => state.auth);
 
   const handleChange = (event) => {
@@ -262,24 +262,37 @@ function CheckOut() {
 
             <Box sx={{ width: { md: "70%" }, px: 2 }}>
               <Box mt={5}>
-                {cartData?.map((product) => (
+                {cartData?.products?.map((item) => (
                   <Box
-                    key={product.productId._id}
+                    key={item._id}
                     sx={{ display: "flex", alignItems: "center", mb: 2 }}
                   >
                     <Box sx={{ width: 100, mr: 2 }}>
                       <img
                         style={{ width: "100%" }}
-                        src={`http://192.168.2.222:5000/${product.productId.image}`}
+                        src={`http://192.168.2.222:5000/${item.productId.image}`}
                         alt=""
                       />
                     </Box>
                     <Box>
                       <Typography variant="h6">
-                        {product.productId.name}
+                        {item.productId.name}
+                        <Typography
+                          variant=""
+                          color="success"
+                          sx={{
+                            fontSize: "18px",
+                            fontWeight: 600,
+                          }}
+                        >
+                          {item?.productId?.addedBy?.businessname}
+                          {item?.productId?.addedBy?.businessname
+                            ? " Product"
+                            : ""}
+                        </Typography>
                       </Typography>
                       <Typography>
-                        ${product.productId.price} x {product.quantity}
+                        ${item.productId.price} x {item.quantity}
                       </Typography>
                     </Box>
                   </Box>
@@ -292,7 +305,7 @@ function CheckOut() {
                 </Typography>
                 <Box display="flex" justifyContent="space-between" mt={2}>
                   <Typography variant="h6">{t("Subtotal")}</Typography>
-                  <Typography variant="h6">${total}</Typography>
+                  <Typography variant="h6">${cartData?.total}</Typography>
                 </Box>
                 <Box display="flex" justifyContent="space-between">
                   <Typography variant="h6" color="green">
@@ -304,7 +317,7 @@ function CheckOut() {
                 </Box>
                 <Box display="flex" justifyContent="space-between" mt={2}>
                   <Typography variant="h5">{t("Total")}</Typography>
-                  <Typography variant="h5">${total}</Typography>
+                  <Typography variant="h5">${cartData?.total}</Typography>
                 </Box>
               </Box>
 

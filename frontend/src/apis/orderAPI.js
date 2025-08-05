@@ -9,6 +9,10 @@ export const getAllOrderAPI = async () => {
   const response = await api.get(`order/getOrder`);
   return response.data;
 };
+export const getAllVendorOrderAPI = async (status) => {
+  const response = await api.get(`order/getVendorOrder?status=${status}`);
+  return response.data;
+};
 
 export const cancelOrderAPI = async (id) => {
   console.log(id);

@@ -175,7 +175,7 @@ export default function Header() {
                 navigate("/Cart");
               }}
             >
-              <Badge badgeContent={cartData.length} color="error">
+              <Badge badgeContent={cartData?.products?.length} color="error">
                 <ShoppingCartIcon color="info" />
               </Badge>
             </IconButton>
@@ -282,7 +282,7 @@ export default function Header() {
                   navigate("/Cart");
                 }}
               >
-                <Badge badgeContent={cartData.length} color="error">
+                <Badge badgeContent={cartData?.products?.length} color="error">
                   <ShoppingCartIcon color="info" />
                 </Badge>
               </IconButton>
@@ -415,7 +415,7 @@ export default function Header() {
 
           <IconButton onClick={() => navigate("/cart")} sx={{ p: 0 }}>
             <Badge
-              badgeContent={cartData?.length || 0}
+              badgeContent={cartData?.products?.length || 0}
               color="error"
               overlap="rectangular"
             >
@@ -537,7 +537,10 @@ export default function Header() {
                     onClick={handleDrawerToggle}
                     aria-label="menu"
                   >
-                    <Badge badgeContent={cartData?.length || 0} color="error">
+                    <Badge
+                      badgeContent={cartData?.products?.length || 0}
+                      color="error"
+                    >
                       <MenuIcon />
                     </Badge>
                   </IconButton>
